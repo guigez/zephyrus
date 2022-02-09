@@ -1,18 +1,34 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import style from '../styles/home.module.scss'
+import Image from 'next/image'
+
+import background from '../../public/Background.svg'
+import googleIcon from '../../public/GoogleIcon.svg'
+
+import styles from '../styles/home.module.scss'
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <>
       <Head>
-        <title>Home</title>
+        <title>Zephyrus</title>
       </Head>
 
-      <main>
-        <h1 className={style.title}>Hello World</h1>
-      </main>
-    </div>
+      <div className={styles.container}>
+        <aside>
+          <Image className={styles.background} src={background} alt="Rocket with background blue" />
+        </aside>
+
+        <main>
+          <div className={styles.login}>
+            <button className={styles.buttonGoogle}>
+              <Image className={styles.googleIcon} height={100} src={googleIcon} alt="Google Icon" />
+              <span>Log in with Google</span>
+            </button>
+          </div>
+        </main>
+      </div>
+    </>
   )
 }
 
