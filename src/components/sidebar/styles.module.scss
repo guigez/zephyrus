@@ -1,0 +1,52 @@
+.aside {
+  width: 16rem;
+  margin-right: 2rem;
+  height: 100vh;
+  background: white;
+  border-radius: 0px 15px 15px 0px;
+
+}
+
+.title{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.menu {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 6.25rem;
+  
+
+  .item {
+    display: flex;
+    align-items: center;
+    margin-left: 3.5rem;
+    height: 3.75rem;
+  }
+}
+
+.icon{
+  
+}
+
+.titleMenu{
+  margin-left: 1rem;
+  font-weight: 500;
+  font-size: 1.125rem;
+  color:#2381FD;
+}
+
+.footer{
+  position: absolute;
+  bottom: 1rem;
+  
+
+  .footerItem{
+    display: flex;
+    align-items: center;
+    margin-left: 3.5rem;
+  }
+}
