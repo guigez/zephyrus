@@ -9,12 +9,12 @@
 }
 
 body {
-
+  background: #C4C4C4;
 }
 
-body, input, textarea, select, button{
+body, input, textarea, select, button, ul, li{
   font: 400 1rem "Roboto", sans-serif;
-  background: #C4C4C4;
+  list-style: none;
 }
 
 button {

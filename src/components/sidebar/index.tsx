@@ -6,6 +6,7 @@ import dashboardIcon from '../../../public/Dashboard.svg'
 import title from '../../../public/Title.svg'
 
 import styles from './styles.module.scss'
+import Link from 'next/link';
 
 export function Sidebar() {
   return (
@@ -18,13 +19,13 @@ export function Sidebar() {
         <div className={styles.menu}>
           <ul>
             <li>
-              <a className={styles.item} href="">
+              <a className={styles.item} href="dashboard">
                 <Image className={styles.icon} src={dashboardIcon} alt="Icone dashboard" />
                 <div className={styles.titleMenu}>Dashboard</div>
               </a>
             </li>
             <li>
-              <a className={styles.item} href="">
+              <a className={styles.item} href="deliveries">
                 <Image className={styles.icon} src={deliveriesIcon} alt="Icone entregas" />
                 <div className={styles.titleMenu}>Entregas</div>
               </a>
@@ -33,12 +34,13 @@ export function Sidebar() {
         </div>
       </div>
       <div className={styles.footer}>
-        <a className={styles.footerItem} href="">
-          <Image className={styles.icon} src={logoutIcon} alt="Icone logout" />
-          <div className={styles.titleMenu}>Log Out</div>
-        </a>
+        <Link href="/">
+          <a className={styles.footerItem}>
+            <Image className={styles.icon} src={logoutIcon} alt="Icone logout" />
+            <div className={styles.titleMenu}>Log Out</div>
+          </a>
+        </Link>
       </div>
     </aside>
-
   );
 }

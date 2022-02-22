@@ -1,0 +1,35 @@
+.headerContainer{
+  height: 5rem;
+  background-color: white;
+  box-shadow: 0 0.1rem 0.5rem rgb(70, 70, 70);
+}
+
+.headerContent {
+  max-width: 1120px;
+  height: 5rem;
+  margin-left: auto; 
+  padding: 0 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: right;
+
+  div{
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-left: 2.5rem;
+    color: #2381FD;
+  }
+
+  .photoUser{
+    display: inline-block;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-color: #c4c4c4;
+  }
+}
