@@ -1,9 +1,10 @@
 import Image from 'next/image';
 
-import deliveriesIcon from '../../../public/deliveries.svg';
-import logoutIcon from '../../../public/logout.svg'
-import dashboardIcon from '../../../public/Dashboard.svg'
 import title from '../../../public/Title.svg'
+
+import { RiDashboardFill } from 'react-icons/ri'
+import { BsBoxSeam } from 'react-icons/bs'
+import { BsBoxArrowLeft } from 'react-icons/bs'
 
 import styles from './styles.module.scss'
 import Link from 'next/link';
@@ -19,13 +20,13 @@ export function Sidebar() {
           <ul>
             <li>
               <a className={styles.item} href="dashboard">
-                <Image className={styles.icon} src={dashboardIcon} alt="Icone dashboard" />
+                <RiDashboardFill className={styles.icon} />
                 <div className={styles.titleMenu}>Dashboard</div>
               </a>
             </li>
             <li>
               <a className={styles.item} href="deliveries">
-                <Image className={styles.icon} src={deliveriesIcon} alt="Icone entregas" />
+                <BsBoxSeam className={styles.icon} />
                 <div className={styles.titleMenu}>Entregas</div>
               </a>
             </li>
@@ -35,7 +36,7 @@ export function Sidebar() {
       <div className={styles.footer}>
         <Link href="/">
           <a className={styles.footerItem}>
-            <Image className={styles.icon} src={logoutIcon} alt="Icone logout" />
+            <BsBoxArrowLeft className={styles.icon} />
             <div className={styles.titleMenu}>Log Out</div>
           </a>
         </Link>
