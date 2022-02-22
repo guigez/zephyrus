@@ -10,7 +10,6 @@ import Link from 'next/link';
 
 export function Sidebar() {
   return (
-
     <aside className={styles.aside}>
       <div>
         <div className={styles.title}>
