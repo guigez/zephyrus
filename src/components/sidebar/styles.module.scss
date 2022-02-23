@@ -1,52 +1,64 @@
-.aside {
-  width: 16rem;
-  margin-right: 2rem;
+.asideContainer {
   height: 91.7vh;
   background: white;
   border-radius: 0px 15px 15px 0px;
 }
 
-.title{
+.asideContent {
+  width: 16rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin-top: 1rem;
-}
 
-.menu {
-  display: flex;
-  align-items: flex-start;
-  margin-top: 6.25rem;
+  .nav {
+    margin-top: 6.25rem;
+    margin-left: 5rem;
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 5rem;
+      height: 5rem;
+      width: 15rem;
+      font-weight: 500;
+      font-size: 1.125rem;
+      color:#2381FD;
   
+      & + .item {
+        margin-top: 2rem;
+      }
 
-  .item {
-    display: flex;
-    align-items: center;
-    margin-left: 3.5rem;
-    height: 3.75rem;
+      .icon {
+        margin-right: 1rem;
+        font-size: 1.5rem;
+      }
+
+      &.active {
+        background-color: #2381FD;
+        color: white;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 15px
+      }
+    }
   }
-}
-
-.icon{
-  color: #2381FD;
-  font-size: 1.5rem;
-}
-
-.titleMenu{
-  margin-left: 1rem;
-  font-weight: 500;
-  font-size: 1.125rem;
-  color:#2381FD;
 }
 
 .footer{
   position: absolute;
   bottom: 1rem;
+  left: 4.5rem;
   
-
   .footerItem{
     display: flex;
-    align-items: center;
-    margin-left: 3.5rem;
+    font-weight: 500;
+    font-size: 1.125rem;
+    color:#2381FD;
+
+    .icon{
+      margin-right: 1rem;
+      font-size: 1.5rem;
+    }
   }
+
 }
