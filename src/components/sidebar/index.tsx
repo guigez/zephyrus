@@ -9,9 +9,6 @@ import { useRouter } from 'next/router';
 
 export function Sidebar() {
   const { asPath } = useRouter()
-
-  console.log(asPath)
-
   return (
     <aside className={styles.asideContainer}>
       <div className={styles.asideContent}>
