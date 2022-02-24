@@ -17,7 +17,7 @@ const Deliveries: NextPage = () => {
         <div className={styles.content}>
           <Sidebar />
           <div className={styles.main}>
-            <h1> Produtos a serem entregues </h1>
+            <h1> Produtos a serem entregues  </h1>
             <div className={styles.table}>
               <table>
                 <thead>
