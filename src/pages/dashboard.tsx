@@ -11,12 +11,42 @@ const Dashboard: NextPage = () => {
       <Head>
         <title>Zephyrus | Dashboard</title>
       </Head>
-
-
       <div className={styles.container}>
         <Header />
         <div className={styles.content}>
           <Sidebar />
+          <div className={styles.main}>
+            <div className={styles.tables}>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>pudim</td>
+                    <td>nos casa</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>pudim</td>
+                    <td>nos casa</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </>
