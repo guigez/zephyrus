@@ -20,7 +20,7 @@ const Dashboard: NextPage = () => {
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
+                    <th>Produto</th>
                     <th>Status</th>
                   </tr>
                 </thead>
@@ -34,7 +34,7 @@ const Dashboard: NextPage = () => {
               <table >
                 <thead>
                   <tr>
-                    <th>Name</th>
+                    <th>Produto</th>
                     <th>Status</th>
                   </tr>
                 </thead>
