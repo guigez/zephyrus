@@ -16,7 +16,7 @@ const Home: NextPage = () => {
 
       <div className={styles.container}>
         <aside>
-          <Image className={styles.background} src={background} alt="Rocket with background blue" />
+          <Image className={styles.background} src={background} alt="Rocket with blue background" />
         </aside>
 
         <main>

@@ -9,7 +9,7 @@ import styles from '../styles/delivery.module.scss'
 
 const Delivery: NextPage = () => {
   const[modalIsOpen, setModalIsOpen] = useState(false)
-  const[preco, setPreco] = useState('Nenhum');
+  const[preco, setPreco] = useState('(Nenhum Preço Sugerido)');
 
   return (
     <>
@@ -92,7 +92,7 @@ const Delivery: NextPage = () => {
                 <button onClick={() => setModalIsOpen(true)} style={{marginTop: '3rem'}}>Sugerir Preço</button>
                 <Modal 
                   isOpen={modalIsOpen} 
-                  shouldCloseOnOverlayClick={true} 
+                  shouldCloseOnOverlayClick={false} 
                   onRequestClose={() => setModalIsOpen(false)}
                   style={
                     {
@@ -109,7 +109,7 @@ const Delivery: NextPage = () => {
                     <label style={{marginLeft: '20%'}}>
                       Sugira um preço para a entrega:
                       <p></p>
-                      <input type='number' name="preco" placeholder="Preço sugerido" onChange={event => setPreco(event.target.value)} style={{marginTop: '1rem', marginLeft: '29%', width: '41%'}}/>
+                      <input type='number' name="preco" placeholder="Preço sugerido" onChange={event => setPreco(event.target.value)} style={{marginTop: '4rem', marginLeft: '29%', width: '41%'}}/>
                     </label>
                     <p></p>
                     <input type="submit" value="Salvar" onClick={() => setModalIsOpen(false)}
@@ -123,25 +123,10 @@ const Delivery: NextPage = () => {
                         padding: '14px 40px',
                         textAlign: 'center',
                         marginLeft: '30%',
-                        marginTop: '1rem',
+                        marginTop: '3rem',
                       }
                     }
                     />
-                    <p></p>
-                  <button onClick={() => setModalIsOpen(false)}
-                  style={
-                    {
-                      backgroundColor: 'cornflowerblue',
-                      color: 'white',
-                      borderRadius: '4px',
-                      fontSize: '20px',
-                      border: '2px solid blue',
-                      padding: '14px 40px',
-                      textAlign: 'center',
-                      marginLeft: '27%',
-                      marginTop: '1rem',
-                    }
-                  }>Cancelar</button>
                 </Modal>
                 <p style={{marginTop: '1rem', fontSize: '20px'}}>Preço sugerido: R${preco}</p>
               </table>

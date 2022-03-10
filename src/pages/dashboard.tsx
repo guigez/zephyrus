@@ -20,27 +20,28 @@ const Dashboard: NextPage = () => {
               <table>
                 <thead>
                   <tr>
-                    <th>Produto</th>
+                    <th>Produto Cadastrado</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>pudim</td>
+                    <td><a href="/myproduct">Pudim</a></td>
                     <td>nos casa</td>
                   </tr>
                 </tbody>
               </table>
+              
               <table >
                 <thead>
                   <tr>
-                    <th>Produto</th>
+                    <th>Produto para Entrega</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>pudim</td>
+                    <td>Farofa</td>
                     <td>nos casa</td>
                   </tr>
                 </tbody>
