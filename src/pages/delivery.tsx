@@ -10,9 +10,6 @@ import Modal from 'react-modal';
 import styles from '../styles/delivery.module.scss'
 import { useEffect, useState } from 'react';
 
-
-
-
 function buscarCoordenada(endereco : string) {
   endereco = endereco.replace(' ', '+');
   return getCoord(endereco);
@@ -166,10 +163,6 @@ const Delivery: NextPage = () => {
           </div>
         </div>
       </div>
-
-
-        
-
       
     </>
   );
