@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Head from 'next/head'
 import GoogleMapReact from 'google-map-react';
 import styles from './styles.module.scss'
+import config from '../../../config.json'
 
 
 const Origem = () => (
@@ -23,7 +24,7 @@ export function Maps(props : any){
     return (
       <div style={{ height: '50vh', width: '100%' }}>
         <GoogleMapReact
-          bootstrapURLKeys={{ key: '' }}
+          bootstrapURLKeys={{ key: config.GOOGLE_KEY }}
           defaultCenter= {{lat: 0 , lng:0}}
           defaultZoom={16}
           center={props.center}
