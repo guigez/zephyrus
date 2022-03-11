@@ -35,7 +35,6 @@ const Deliveries: NextPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-<<<<<<< HEAD
                   {isLoading ? (
                     <h1>Loading ...</h1>
                   ) : data.map(delivery => {
@@ -47,13 +46,6 @@ const Deliveries: NextPage = () => {
                       </tr>
                     )
                   })}
-=======
-                  <tr>
-                    <td><a href="/delivery">Pudim</a></td>
-                    <td>casa origem legal lorem</td>
-                    <td>casa destino muito legal</td>
-                  </tr>
->>>>>>> cc934f0fa53b3b7d1a3ee81564fb3c27cb5854a6
                 </tbody>
               </table>
             </div>
