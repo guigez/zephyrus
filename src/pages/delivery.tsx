@@ -2,14 +2,42 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Header } from '../components/header';
 import { Sidebar } from '../components/sidebar';
+import { Maps } from '../components/maps';
+import { getCoord } from '../api/maps';
 import React, { useState } from "react";
 import Modal from 'react-modal';
 
 import styles from '../styles/delivery.module.scss'
+import { useEffect, useState } from 'react';
+
+
+
+
+function buscarCoordenada(endereco : string) {
+  endereco = endereco.replace(' ', '+');
+  return getCoord(endereco);
+}
+
+
 
 const Delivery: NextPage = () => {
+  const [origem, setOrigem] = useState({lat: 0, lng: 0});
+  const [destino, setDestino] = useState({lat: 0, lng: 0});
   const[modalIsOpen, setModalIsOpen] = useState(false)
   const[preco, setPreco] = useState('(Nenhum Preço Sugerido)');
+
+  useEffect(() => {
+    //origem
+    buscarCoordenada('rua genesio ferreira martins, 81').then(e => {
+      setOrigem(e.data.results[0].geometry.location)
+
+    })
+
+    //destino
+    buscarCoordenada('Rua Orlando Bismara, 130 - Jardim Nova Manchester, Sorocaba - SP, 18052-015').then(e => {
+      setDestino(e.data.results[0].geometry.location)
+    })
+  }, []);
 
   return (
     <>
@@ -131,9 +159,18 @@ const Delivery: NextPage = () => {
                 <p style={{marginTop: '1rem', fontSize: '20px'}}>Preço sugerido: R${preco}</p>
               </table>
             </div>
+
+            <div className= {styles.map}>
+              <Maps center = {origem} origem= {origem} destino= {destino}/>
+            </div>
           </div>
         </div>
       </div>
+
+
+        
+
+      
     </>
   );
 }
