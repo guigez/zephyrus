@@ -4,7 +4,8 @@ import { Header } from '../components/header';
 import { Sidebar } from '../components/sidebar';
 import { Maps } from '../components/maps';
 import { getCoord } from '../api/maps';
-//import Modal from '../components/modal/modal.js';
+import React, { useState } from "react";
+import Modal from 'react-modal';
 
 import styles from '../styles/delivery.module.scss'
 import { useEffect, useState } from 'react';
@@ -20,9 +21,10 @@ function buscarCoordenada(endereco : string) {
 
 
 const Delivery: NextPage = () => {
-
   const [origem, setOrigem] = useState({lat: 0, lng: 0});
   const [destino, setDestino] = useState({lat: 0, lng: 0});
+  const[modalIsOpen, setModalIsOpen] = useState(false)
+  const[preco, setPreco] = useState('(Nenhum Preço Sugerido)');
 
   useEffect(() => {
     //origem
@@ -36,7 +38,6 @@ const Delivery: NextPage = () => {
       setDestino(e.data.results[0].geometry.location)
     })
   }, []);
-  
 
   return (
     <>
@@ -116,9 +117,46 @@ const Delivery: NextPage = () => {
                   </tr>
                 </tbody>
 
-                <button /*onClick={}*/>
-                  Sugerir
-                </button>
+                <button onClick={() => setModalIsOpen(true)} style={{marginTop: '3rem'}}>Sugerir Preço</button>
+                <Modal 
+                  isOpen={modalIsOpen} 
+                  shouldCloseOnOverlayClick={false} 
+                  onRequestClose={() => setModalIsOpen(false)}
+                  style={
+                    {
+                      content: {
+                        borderRadius: '8px',
+                        width: '400px',
+                        height: '300px',
+                        marginLeft: '40%',
+                        color: 'blue',
+                      }
+                    }
+                  }
+                >
+                    <label style={{marginLeft: '20%'}}>
+                      Sugira um preço para a entrega:
+                      <p></p>
+                      <input type='number' name="preco" placeholder="Preço sugerido" onChange={event => setPreco(event.target.value)} style={{marginTop: '4rem', marginLeft: '29%', width: '41%'}}/>
+                    </label>
+                    <p></p>
+                    <input type="submit" value="Salvar" onClick={() => setModalIsOpen(false)}
+                    style={
+                      {
+                        backgroundColor: 'cornflowerblue',
+                        color: 'white',
+                        borderRadius: '4px',
+                        fontSize: '20px',
+                        border: '2px solid blue',
+                        padding: '14px 40px',
+                        textAlign: 'center',
+                        marginLeft: '30%',
+                        marginTop: '3rem',
+                      }
+                    }
+                    />
+                </Modal>
+                <p style={{marginTop: '1rem', fontSize: '20px'}}>Preço sugerido: R${preco}</p>
               </table>
             </div>
 

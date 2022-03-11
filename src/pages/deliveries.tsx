@@ -27,10 +27,10 @@ const Deliveries: NextPage = () => {
                     <th>destiny</th>
                   </tr>
                 </thead>
-                <tbody> 
+                <tbody>
                   <tr>
-                    <td>Produto muito maneiro</td>
-                    <td>casa muito legal lorem</td>
+                    <td><a href="/delivery">Pudim</a></td>
+                    <td>casa origem legal lorem</td>
                     <td>casa destino muito legal</td>
                   </tr>
                 </tbody>
