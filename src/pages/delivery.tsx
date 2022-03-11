@@ -2,11 +2,42 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Header } from '../components/header';
 import { Sidebar } from '../components/sidebar';
-import Modal from '../components/modal/modal.js';
+import { Maps } from '../components/maps';
+import { getCoord } from '../api/maps';
+//import Modal from '../components/modal/modal.js';
 
 import styles from '../styles/delivery.module.scss'
+import { useEffect, useState } from 'react';
+
+
+
+
+function buscarCoordenada(endereco : string) {
+  endereco = endereco.replace(' ', '+');
+  return getCoord(endereco);
+}
+
+
 
 const Delivery: NextPage = () => {
+
+  const [origem, setOrigem] = useState({lat: 0, lng: 0});
+  const [destino, setDestino] = useState({lat: 0, lng: 0});
+
+  useEffect(() => {
+    //origem
+    buscarCoordenada('rua genesio ferreira martins, 81').then(e => {
+      setOrigem(e.data.results[0].geometry.location)
+
+    })
+
+    //destino
+    buscarCoordenada('Rua Orlando Bismara, 130 - Jardim Nova Manchester, Sorocaba - SP, 18052-015').then(e => {
+      setDestino(e.data.results[0].geometry.location)
+    })
+  }, []);
+  
+
   return (
     <>
       <Head>
@@ -90,9 +121,18 @@ const Delivery: NextPage = () => {
                 </button>
               </table>
             </div>
+
+            <div className= {styles.map}>
+              <Maps center = {origem} origem= {origem} destino= {destino}/>
+            </div>
           </div>
         </div>
       </div>
+
+
+        
+
+      
     </>
   );
 }

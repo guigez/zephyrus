@@ -22,15 +22,15 @@ const Deliveries: NextPage = () => {
               <table>
                 <thead>
                   <tr>
-                    <th>Produto</th>
-                    <th>Origem</th>
-                    <th>Destino</th>
+                    <th>Name</th>
+                    <th>Origin</th>
+                    <th>destiny</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody> 
                   <tr>
                     <td>Produto muito maneiro</td>
-                    <td>casa origem legal lorem</td>
+                    <td>casa muito legal lorem</td>
                     <td>casa destino muito legal</td>
                   </tr>
                 </tbody>
