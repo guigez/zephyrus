@@ -2,24 +2,24 @@ import { useQuery } from "react-query";
 import { api } from "../api/api";
 
 type Delivery = {
-  id: String,
-  id_client: String,
-  id_deliveryman: String,
-  id_order: String,
-  origin: String,
-  destiny: String,
-  price?: String,
-  status: String,
-  created_at: String,
-  update_at: String,
+  id: string,
+  id_client: string,
+  id_deliveryman: string,
+  id_order: string,
+  origin: string,
+  destiny: string,
+  price?: string,
+  status: string,
+  created_at: string,
+  update_at: string,
   order: {
-    id: String,
-    product_name: String,
-    width: String,
-    height: String,
-    length: String,
-    weight: String,
-    description: String,
+    id: string,
+    product_name: string,
+    width: string,
+    height: string,
+    length: string,
+    weight: string,
+    description: string,
   }
 }
 
@@ -42,13 +42,13 @@ export async function getDeliveriesAvailable(): Promise<Delivery[]>{
           price: delivery.price,
           status: delivery.status,
           created_at: delivery.created_at,
-          uypdate_at: delivery.update_at,
+          update_at: delivery.update_at,
           order: {
             id: delivery.order.id,
             product_name: delivery.order.product_name,
             width: delivery.order.width,
             height: delivery.order.height,
-            lenght: delivery.order.length,
+            length: delivery.order.length,
             weight: delivery.order.weight,
             description: delivery.order.description
           }

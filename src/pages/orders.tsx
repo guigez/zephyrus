@@ -6,8 +6,13 @@ import styles from '../styles/orders.module.scss'
 import { InfoOrders } from '../components/infoOrders'
 import { Header } from '../components/header'
 import { Sidebar } from '../components/sidebar'
+import { useContext } from 'react'
+import { GoogleAuthContext } from '../contexts/GoogleAuthContext'
+
 
 const Orders: NextPage = () => {
+  const { user } = useContext(GoogleAuthContext);
+
   return (
     <>
       <Head>
@@ -15,11 +20,11 @@ const Orders: NextPage = () => {
       </Head>
 
       <div className={styles.container}>
-        <Header />
+        <Header name={user.name} avatar={user.avatar} />
         <div className={styles.content}>
           <Sidebar />
           <main>
-          <InfoOrders />
+            <InfoOrders />
           </main>
         </div>
       </div>

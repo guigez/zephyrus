@@ -2,14 +2,16 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Header } from '../components/header';
 import { Sidebar } from '../components/sidebar';
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Modal from 'react-modal';
 
 import styles from '../styles/delivery.module.scss'
+import { GoogleAuthContext } from '../contexts/GoogleAuthContext';
 
 const MyProduct: NextPage = () => {
-  const[modalIsOpen, setModalIsOpen] = useState(false)
-  const[preco, setPreco] = useState('20');
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [preco, setPreco] = useState('20');
+  const { user } = useContext(GoogleAuthContext);
 
   return (
     <>
@@ -17,7 +19,7 @@ const MyProduct: NextPage = () => {
         <title>Zephyrus | My Product</title>
       </Head>
       <div className={styles.container}>
-        <Header />
+        <Header name={user.name} avatar={user.avatar} />
         <div className={styles.content}>
           <Sidebar />
           <div className={styles.main}>
@@ -90,29 +92,29 @@ const MyProduct: NextPage = () => {
                   <tr>
                     <td>Matheus</td>
                     <td>R${preco}</td>
-                    <td style={{color: 'green'}}>Aceitar</td>
-                    <td style={{color: 'red'}}>Recusar</td>
+                    <td style={{ color: 'green' }}>Aceitar</td>
+                    <td style={{ color: 'red' }}>Recusar</td>
                   </tr>
                 </tbody>
                 <tbody>
                   <tr>
                     <td>Wilson</td>
                     <td>R$35</td>
-                    <td style={{color: 'green'}}>Aceitar</td>
-                    <td style={{color: 'red'}}>Recusar</td>
+                    <td style={{ color: 'green' }}>Aceitar</td>
+                    <td style={{ color: 'red' }}>Recusar</td>
                   </tr>
                 </tbody>
                 <tbody>
                   <tr>
                     <td>Marlene</td>
                     <td>R$10</td>
-                    <td style={{color: 'green'}}>Aceitar</td>
-                    <td style={{color: 'red'}}>Recusar</td>
+                    <td style={{ color: 'green' }}>Aceitar</td>
+                    <td style={{ color: 'red' }}>Recusar</td>
                   </tr>
                 </tbody>
 
-                <button onClick={() => setModalIsOpen(true)} 
-                style={{marginTop: '3rem', backgroundColor: 'rgb(255, 75, 75)', borderColor: 'grey'}}>
+                <button onClick={() => setModalIsOpen(true)}
+                  style={{ marginTop: '3rem', backgroundColor: 'rgb(255, 75, 75)', borderColor: 'grey' }}>
                   Não entregue
                 </button>
               </table>

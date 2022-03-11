@@ -1,10 +1,11 @@
 .asideContainer {
-  height: 91.7vh;
+ // height: 100vh;
   background: white;
   border-radius: 0px 15px 15px 0px;
 }
 
 .asideContent {
+  height: 100vh;
   width: 16rem;
   display: flex;
   flex-direction: column;
@@ -45,7 +46,7 @@
 }
 
 .footer{
-  position: absolute;
+  position: fixed;
   bottom: 1rem;
   left: 4.5rem;
   

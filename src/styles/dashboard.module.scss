@@ -25,11 +25,16 @@
     width: 100%;
     text-align: left;
     padding: 2rem;
+    border-spacing: 1rem 2rem;
 
+    
+    
     td{
-      padding-top: 2rem;
-      padding-bottom: 0.3rem;
-      border-bottom: 1px solid #c4c4c4;
+      box-shadow: 0 0 15px 4px rgba(0,0,0,0.06);
+      border-radius: 1rem;
+      padding: 0.823rem;
+      color:rgba(0, 0, 0, 0.883);
+      //border-bottom: 1px solid #c4c4c4;
     }
   }
 }

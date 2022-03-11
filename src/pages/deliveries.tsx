@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Link from 'next/link';
 import { useContext, useEffect } from 'react';
 import { Header } from '../components/header';
 import { Sidebar } from '../components/sidebar';
@@ -10,8 +11,12 @@ import { useDeliveriesAvailable } from '../services/hooks/useDeliveriesAvailable
 import styles from '../styles/deliveries.module.scss'
 
 const Deliveries: NextPage = () => {
-    const { data, isLoading } = useDeliveriesAvailable();
-    const { user } = useContext(GoogleAuthContext);
+  const { data, isLoading, isFetching } = useDeliveriesAvailable();
+  const { user } = useContext(GoogleAuthContext);
+
+  async function handleDelivery(id: string) {
+
+  }
 
   return (
     <>
@@ -19,44 +24,41 @@ const Deliveries: NextPage = () => {
         <title>Zephyrus | Deliveries</title>
       </Head>
 
-      <Header name={user.name || 'UNDEFINED'} avatar={user.avatar || 'UNDEFINED'}/>
+      <Header name={user.name} avatar={user.avatar} />
       <div className={styles.container}>
         <div className={styles.content}>
           <Sidebar />
           <div className={styles.main}>
             <h1> Produtos a serem entregues  </h1>
-            <div className={styles.table}>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Produto</th>
-                    <th>Origem</th>
-                    <th>Destino</th>
-                  </tr>
-                </thead>
-                <tbody>
-<<<<<<< HEAD
-                  {isLoading ? (
-                    <h1>Loading ...</h1>
-                  ) : data.map(delivery => {
-                    return(
-                      <tr>
-                        <td>{delivery.order.product_name}</td>
-                        <td>{delivery.origin}</td>
-                        <td>{delivery.destiny}</td>
-                      </tr>
-                    )
-                  })}
-=======
-                  <tr>
-                    <td><a href="/delivery">Pudim</a></td>
-                    <td>casa origem legal lorem</td>
-                    <td>casa destino muito legal</td>
-                  </tr>
->>>>>>> cc934f0fa53b3b7d1a3ee81564fb3c27cb5854a6
-                </tbody>
-              </table>
-            </div>
+            {isLoading ? (
+              <div className={styles.table}>
+                <h1>Loading ...</h1>
+              </div>
+            ) : data.map(delivery => {
+              return (
+                <>
+                  <div className={styles.table}>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Produto</th>
+                          <th>Origem</th>
+                          <th>Destino</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr key={delivery.id}>
+                          <td style={{ color: '#2381FD', fontWeight: '500' }}>
+                            <Link href={`/delivery/${delivery.id}`}>{delivery.order.product_name}</Link></td>
+                          <td>{delivery.origin}</td>
+                          <td>{delivery.destiny}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )
+            })}
           </div>
         </div>
       </div>

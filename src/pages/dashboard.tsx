@@ -9,14 +9,14 @@ import styles from '../styles/dashboard.module.scss'
 
 const Dashboard: NextPage = () => {
   const { user } = useContext(GoogleAuthContext);
-  
+
   return (
     <>
       <Head>
         <title>Zephyrus | Dashboard</title>
       </Head>
       <div className={styles.container}>
-        <Header name={user.name} avatar={user.avatar}/>
+        <Header name={user.name} avatar={user.avatar} />
         <div className={styles.content}>
           <Sidebar />
           <div className={styles.main}>
@@ -30,12 +30,12 @@ const Dashboard: NextPage = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td><a href="/myproduct">Pudim</a></td>
-                    <td>nos casa</td>
+                    <td>Sapato</td>
+                    <td style={{ backgroundColor: '#E73F5D', textAlign: 'center', fontWeight: '500' }}>Não Entregue</td>
                   </tr>
                 </tbody>
               </table>
-              
+
               <table >
                 <thead>
                   <tr>
@@ -45,8 +45,8 @@ const Dashboard: NextPage = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Farofa</td>
-                    <td>nos casa</td>
+                    <td>Smart Tv</td>
+                    <td style={{ backgroundColor: '#E9E125', textAlign: 'center', fontWeight: 500 }}>Aguardando Entrega</td>
                   </tr>
                 </tbody>
               </table>
