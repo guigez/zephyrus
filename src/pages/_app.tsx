@@ -1,14 +1,18 @@
 import type { AppProps } from 'next/app'
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { GoogleAuthProvider } from '../contexts/GoogleAuthContext';
 
+const queryClient = new QueryClient();
 
 import '../styles/global.scss'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <GoogleAuthProvider>
-      <Component {...pageProps} />
-    </GoogleAuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <GoogleAuthProvider>
+        <Component {...pageProps} />
+      </GoogleAuthProvider>
+    </QueryClientProvider>
   );
 }
 
