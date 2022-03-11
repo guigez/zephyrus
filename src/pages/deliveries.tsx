@@ -30,22 +30,22 @@ const Deliveries: NextPage = () => {
           <Sidebar />
           <div className={styles.main}>
             <h1> Produtos a serem entregues  </h1>
-            {isLoading ? (
-              <div className={styles.table}>
-                <h1>Loading ...</h1>
-              </div>
-            ) : data.map(delivery => {
-              return (
-                <>
+            <div className={styles.table}>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                  </tr>
+                </thead>
+                {isLoading ? (
                   <div className={styles.table}>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Produto</th>
-                          <th>Origem</th>
-                          <th>Destino</th>
-                        </tr>
-                      </thead>
+                    <h1>Loading ...</h1>
+                  </div>
+                ) : data.map(delivery => {
+                  return (
+                    <>
                       <tbody>
                         <tr key={delivery.id}>
                           <td style={{ color: '#2381FD', fontWeight: '500' }}>
@@ -54,11 +54,11 @@ const Deliveries: NextPage = () => {
                           <td>{delivery.destiny}</td>
                         </tr>
                       </tbody>
-                    </table>
-                  </div>
-                </>
-              )
-            })}
+                    </>
+                  )
+                })}
+              </table>
+            </div>
           </div>
         </div>
       </div>
