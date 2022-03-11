@@ -4,7 +4,6 @@ import { Header } from '../components/header';
 import { Sidebar } from '../components/sidebar';
 import { Maps } from '../components/maps';
 import { getCoord } from '../api/maps';
-import React, { useState } from "react";
 import Modal from 'react-modal';
 
 import styles from '../styles/delivery.module.scss'

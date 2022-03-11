@@ -22,9 +22,9 @@ const Deliveries: NextPage = () => {
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Origin</th>
-                    <th>destiny</th>
+                    <th>Produto</th>
+                    <th>Origem</th>
+                    <th>Destino</th>
                   </tr>
                 </thead>
                 <tbody>
