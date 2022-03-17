@@ -187,7 +187,6 @@ export default function Delivery({ product }: ProductType) {
           </div>
         </div>
       </div>
-
     </>
   );
 }
