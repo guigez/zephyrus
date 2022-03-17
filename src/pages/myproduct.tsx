@@ -19,7 +19,7 @@ const MyProduct: NextPage = () => {
         <title>Zephyrus | My Product</title>
       </Head>
       <div className={styles.container}>
-        <Header name={user.name} avatar={user.avatar} />
+        <Header />
         <div className={styles.content}>
           <Sidebar />
           <div className={styles.main}>

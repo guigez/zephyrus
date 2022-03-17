@@ -4,16 +4,17 @@ import { createContext, ReactNode } from "react";
 import { useGoogleLogin } from 'react-use-googlelogin'
 
 type User = {
-  id: string | undefined,
-  name: string | undefined,
-  email: string | undefined,
-  avatar: string | undefined
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
 }
 
 type GoogleAuthContextType = {
-  user: User | undefined
-  googleAuth: any,
-  googleSignIn: () => Promise<void>
+  user: User | undefined;
+  googleBeSignIn: () => boolean;
+  googleSignIn: () => Promise<void>;
+  googleSignOut: () => Promise<void>;
 }
 
 type AuthContextProviderPros = {
@@ -25,27 +26,47 @@ export const GoogleAuthContext = React.createContext({} as GoogleAuthContextType
 export const GoogleAuthProvider = (props: AuthContextProviderPros) => {
   const [user, setUser] = useState<User>();
 
-
   const googleAuth = useGoogleLogin({
     clientId: "118617181127-18g9g3hek2fgs5aeelf3itj5kql3hpd7.apps.googleusercontent.com", // Your clientID from Google.
   })
 
+
   async function googleSignIn() {
     const googleUser = await googleAuth.signIn()
 
-    setUser({
-      id: googleUser?.profileObj?.googleId,
-      name: googleUser?.profileObj?.name,
-      email: googleUser?.profileObj?.email,
-      avatar: googleUser?.profileObj?.imageUrl
-    })
+    if (googleUser) {
+      const { googleId: id, name, email, imageUrl: avatar } = googleUser.profileObj
 
-    Router.push('/dashboard');
+      if (!name || !avatar) {
+        throw new Error('Missing information from Google Account.');
+      }
+
+
+      setUser({
+        id: id,
+        name: name,
+        email: email,
+        avatar: avatar
+      })
+    }
+
+  }
+
+  function googleBeSignIn() {
+    return googleAuth.isSignedIn
+  }
+
+  async function googleSignOut() {
+    await googleAuth.signOut();
+
+    setUser(undefined);
+
   }
 
 
+
   return (
-    <GoogleAuthContext.Provider value={{ googleAuth, googleSignIn, user }}>
+    <GoogleAuthContext.Provider value={{ googleBeSignIn, googleSignIn, googleSignOut, user }}>
       {props.children}
     </GoogleAuthContext.Provider>
   )

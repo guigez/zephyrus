@@ -1,21 +1,26 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useContext } from 'react'
+import { useRouter } from 'next/router'
 
 import background from '../../public/Background.svg'
 import googleIcon from '../../public/GoogleIcon.svg'
-import { GoogleAuthContext } from '../contexts/GoogleAuthContext'
+import { useGoogleAuth } from '../services/hooks/useGoogleAuth'
+
 
 
 import styles from '../styles/home.module.scss'
 
 const Home: NextPage = () => {
-  const { googleSignIn } = useContext(GoogleAuthContext)
+  const router = useRouter();
+  const { user, googleSignIn, googleBeSignIn } = useGoogleAuth();
 
   async function handleSignIn() {
-    const user = await googleSignIn();
-    console.log(user)
+    if (googleBeSignIn) {
+      await googleSignIn();
+    }
+
+    router.push('/dashboard')
   }
 
   return (

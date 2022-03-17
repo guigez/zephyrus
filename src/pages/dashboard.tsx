@@ -5,10 +5,16 @@ import { Header } from '../components/header';
 import { Sidebar } from '../components/sidebar';
 import { GoogleAuthContext } from '../contexts/GoogleAuthContext';
 
+import { useDeliveriesClient } from '../services/hooks/useDeliveriesClient';
+import { useDeliveriesDeliveryman } from '../services/hooks/useDelivieriesDeliveryma'
+
 import styles from '../styles/dashboard.module.scss'
 
 const Dashboard: NextPage = () => {
   const { user } = useContext(GoogleAuthContext);
+
+  const { data: dataClient, isLoading: isLoadingClient } = useDeliveriesClient();
+  const { data: dataDeliveryman, isLoading: isLoadingDeliveryman } = useDeliveriesDeliveryman();
 
   return (
     <>
@@ -16,7 +22,7 @@ const Dashboard: NextPage = () => {
         <title>Zephyrus | Dashboard</title>
       </Head>
       <div className={styles.container}>
-        <Header name={user.name} avatar={user.avatar} />
+        <Header />
         <div className={styles.content}>
           <Sidebar />
           <div className={styles.main}>
@@ -28,12 +34,28 @@ const Dashboard: NextPage = () => {
                     <th>Status</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>Sapato</td>
-                    <td style={{ backgroundColor: '#E73F5D', textAlign: 'center', fontWeight: '500' }}>Não Entregue</td>
-                  </tr>
-                </tbody>
+                {isLoadingClient ? (
+                  <div className={styles.table}>
+                    <h1>Loading ...</h1>
+                  </div>
+                ) : dataClient.map(deliveryClient => {
+                  return (
+                    <>
+                      <tbody>
+                        <tr>
+                          <td>{deliveryClient.order.product_name}</td>
+                          {deliveryClient.status === 'available' ? (
+                            <td style={{ backgroundColor: '#E73F5D', textAlign: 'center', fontWeight: '500' }}>Não Entregue</td>
+                          ) : deliveryClient.status === 'delivered' ? (
+                            <td style={{ backgroundColor: '#78E025', textAlign: 'center', fontWeight: '500' }}>Entregue</td>
+                          ) :
+                            <td style={{ backgroundColor: '#E9E125', textAlign: 'center', fontWeight: '500' }}>Aguardando Entrega</td>
+                          }
+                        </tr>
+                      </tbody>
+                    </>
+                  )
+                })}
               </table>
 
               <table >
@@ -43,12 +65,28 @@ const Dashboard: NextPage = () => {
                     <th>Status</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>Smart Tv</td>
-                    <td style={{ backgroundColor: '#E9E125', textAlign: 'center', fontWeight: 500 }}>Aguardando Entrega</td>
-                  </tr>
-                </tbody>
+                {isLoadingDeliveryman ? (
+                  <div className={styles.table}>
+                    <h1>Loading ...</h1>
+                  </div>
+                ) : dataDeliveryman.map(deliveryDeliveryman => {
+                  return (
+                    <>
+                      <tbody>
+                        <tr>
+                          <td>{deliveryDeliveryman.order.product_name}</td>
+                          {deliveryDeliveryman.status === 'available' ? (
+                            <td style={{ backgroundColor: '#E73F5D', textAlign: 'center', fontWeight: '500' }}>Não Entregue</td>
+                          ) : deliveryDeliveryman.status === 'delivered' ? (
+                            <td style={{ backgroundColor: '#78E025', textAlign: 'center', fontWeight: '500' }}>Entregue</td>
+                          ) :
+                            <td style={{ backgroundColor: '#E9E125', textAlign: 'center', fontWeight: '500' }}>Aguardando Entrega</td>
+                          }
+                        </tr>
+                      </tbody>
+                    </>
+                  )
+                })}
               </table>
             </div>
           </div>
