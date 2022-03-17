@@ -20,7 +20,7 @@ const Orders: NextPage = () => {
       </Head>
 
       <div className={styles.container}>
-        <Header name={user.name} avatar={user.avatar} />
+        <Header />
         <div className={styles.content}>
           <Sidebar />
           <main>

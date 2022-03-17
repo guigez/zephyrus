@@ -4,11 +4,22 @@ import { BsBoxArrowLeft } from 'react-icons/bs'
 
 import styles from './styles.module.scss'
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
+import { useGoogleAuth } from '../../services/hooks/useGoogleAuth';
 
 
 export function Sidebar() {
   const { asPath } = useRouter()
+  const { googleSignOut, googleBeSignIn } = useGoogleAuth();
+  const router = useRouter();
+
+  async function logOut() {
+    if (!googleBeSignIn) {
+      await googleSignOut();
+    }
+    router.push('/');
+  }
+
   return (
     <aside className={styles.asideContainer}>
       <div className={styles.asideContent}>
@@ -28,12 +39,12 @@ export function Sidebar() {
           </Link>
         </nav>
         <div className={styles.footer}>
-          <Link href="/">
-            <a className={styles.footerItem}>
-              <BsBoxArrowLeft className={styles.icon} />
-              Log Out
-            </a>
-          </Link>
+
+          <a className={styles.footerItem} onClick={logOut}>
+            <BsBoxArrowLeft className={styles.icon} />
+            Log Out
+          </a>
+
         </div>
       </div>
     </aside>

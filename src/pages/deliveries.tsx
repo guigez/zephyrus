@@ -24,7 +24,7 @@ const Deliveries: NextPage = () => {
         <title>Zephyrus | Deliveries</title>
       </Head>
 
-      <Header name={user.name} avatar={user.avatar} />
+      <Header />
       <div className={styles.container}>
         <div className={styles.content}>
           <Sidebar />

@@ -11,6 +11,8 @@ import styles from '../../styles/delivery.module.scss'
 import { useEffect, useState } from 'react';
 import { GoogleAuthContext } from '../../contexts/GoogleAuthContext';
 import { getDeliveriesAvailable, useDeliveriesAvailable } from '../../services/hooks/useDeliveriesAvailable';
+import { api } from '../../services/api/api';
+import { METHODS } from 'http';
 
 
 function buscarCoordenada(endereco: string) {
@@ -63,13 +65,30 @@ export default function Delivery({ product }: ProductType) {
     })
   }, []);
 
+  async function handleSubmitSuggestion() {
+
+    const { data } = await api.post(`deliveries/suggestion`,
+      JSON.stringify({
+        "deliveryId": product.id,
+        "priceSuggestion": preco
+      }),
+      {
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDc1MjQwMTcsImV4cCI6MTY0NzYxMDQxNywic3ViIjoiNjIyYTEyZjBkNjZhODgwZWVhMjRiNzhiIn0.y8S8G8D9VsOSRIgfTVimKl9E85Mv7iW2a6Yl0_iKHX8`,
+        },
+      })
+
+    setModalIsOpen(false)
+  }
+
   return (
     <>
       <Head>
         <title>Zephyrus | Delivery</title>
       </Head>
       <div className={styles.container}>
-        <Header name={user.name} avatar={user.avatar} />
+        <Header />
         <div className={styles.content}>
           <Sidebar />
           <div className={styles.main}>
@@ -200,7 +219,7 @@ export default function Delivery({ product }: ProductType) {
                       }} />
                   </label>
                   <p></p>
-                  <input type="submit" value="Salvar" onClick={() => setModalIsOpen(false)}
+                  <input type="submit" value="Salvar" onClick={handleSubmitSuggestion}
                     style={
                       {
                         display: 'flex',
@@ -241,6 +260,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const deliveries = await getDeliveriesAvailable()
 
   const delivery = deliveries.find(delivery => delivery.id = String(slug));
+  console.log(delivery)
 
   const product = {
     id: delivery.id,

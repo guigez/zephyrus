@@ -23,14 +23,15 @@ type Delivery = {
   }
 }
 
-export async function getDeliveriesAvailable(): Promise<Delivery[]>{
-      const { data } = await api.get('deliveries', {
+export async function getDeliveriesDeliveryman(): Promise<Delivery[]>{
+      const { data } = await api.get('deliveries/deliveryman', {
         headers: {
           'Content-type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDc1MjQwMTcsImV4cCI6MTY0NzYxMDQxNywic3ViIjoiNjIyYTEyZjBkNjZhODgwZWVhMjRiNzhiIn0.y8S8G8D9VsOSRIgfTVimKl9E85Mv7iW2a6Yl0_iKHX8`, 
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDc1Mjk4OTcsImV4cCI6MTY0NzYxNjI5Nywic3ViIjoiNjIyYTEyMzIzMWEyZjMzZjJmNzBkYWQ2In0.y1FB_WxIJBiRSBMNM7XpQtpQqXw9BVHTpw-QWX4X-SM`, 
         }
       })
-
+      
+      console.log(data)
       const deliveries: Delivery[] = data.deliveries.map((delivery: Delivery) => {
         return {
           id: delivery.id,
@@ -60,8 +61,8 @@ export async function getDeliveriesAvailable(): Promise<Delivery[]>{
     
 }
 
-export function useDeliveriesAvailable() {
-  return useQuery('deliveries-availabe', getDeliveriesAvailable,{
+export function useDeliveriesDeliveryman() {
+  return useQuery('deliveries-deliveryman', getDeliveriesDeliveryman,{
     staleTime: 1000 *5,
   })
 }
