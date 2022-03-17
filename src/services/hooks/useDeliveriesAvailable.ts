@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import { api } from "../api/api";
+import { useGoogleAuth } from "./useGoogleAuth";
 
 type Delivery = {
   id: string,
@@ -23,11 +24,12 @@ type Delivery = {
   }
 }
 
-export async function getDeliveriesAvailable(): Promise<Delivery[]>{
+
+export async function getDeliveriesAvailable(token: string ): Promise<Delivery[]>{
       const { data } = await api.get('deliveries', {
         headers: {
           'Content-type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDc1MjQwMTcsImV4cCI6MTY0NzYxMDQxNywic3ViIjoiNjIyYTEyZjBkNjZhODgwZWVhMjRiNzhiIn0.y8S8G8D9VsOSRIgfTVimKl9E85Mv7iW2a6Yl0_iKHX8`, 
+          'Authorization': `Bearer ${token}`, 
         }
       })
 
@@ -55,13 +57,13 @@ export async function getDeliveriesAvailable(): Promise<Delivery[]>{
         }
       })
 
-      console.log(deliveries)
+    
       return deliveries; 
     
 }
 
-export function useDeliveriesAvailable() {
-  return useQuery('deliveries-availabe', getDeliveriesAvailable,{
+export function useDeliveriesAvailable(token: string) {
+  return useQuery(['deliveries-availabe', token], () => getDeliveriesAvailable(token),{
     staleTime: 1000 *5,
   })
 }

@@ -11,8 +11,8 @@ import { useDeliveriesAvailable } from '../services/hooks/useDeliveriesAvailable
 import styles from '../styles/deliveries.module.scss'
 
 const Deliveries: NextPage = () => {
-  const { data, isLoading, isFetching } = useDeliveriesAvailable();
   const { user } = useContext(GoogleAuthContext);
+  const { data, isLoading, isFetching } = useDeliveriesAvailable(user.token);
 
   async function handleDelivery(id: string) {
 

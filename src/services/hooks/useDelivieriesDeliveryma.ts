@@ -23,15 +23,14 @@ type Delivery = {
   }
 }
 
-export async function getDeliveriesDeliveryman(): Promise<Delivery[]>{
-      const { data } = await api.get('deliveries/deliveryman', {
+export async function getDeliveriesDeliveryman(token: string): Promise<Delivery[]>{
+      const { data } = await api.get('deliveriesDeliveryman', {
         headers: {
           'Content-type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDc1Mjk4OTcsImV4cCI6MTY0NzYxNjI5Nywic3ViIjoiNjIyYTEyMzIzMWEyZjMzZjJmNzBkYWQ2In0.y1FB_WxIJBiRSBMNM7XpQtpQqXw9BVHTpw-QWX4X-SM`, 
+          'Authorization': `Bearer ${token}`, 
         }
       })
       
-      console.log(data)
       const deliveries: Delivery[] = data.deliveries.map((delivery: Delivery) => {
         return {
           id: delivery.id,
@@ -56,13 +55,13 @@ export async function getDeliveriesDeliveryman(): Promise<Delivery[]>{
         }
       })
 
-      console.log(deliveries)
+    
       return deliveries; 
     
 }
 
-export function useDeliveriesDeliveryman() {
-  return useQuery('deliveries-deliveryman', getDeliveriesDeliveryman,{
+export function useDeliveriesDeliveryman(token: string) {
+  return useQuery(['deliveries-deliveryman', token], () => getDeliveriesDeliveryman(token),{
     staleTime: 1000 *5,
   })
 }

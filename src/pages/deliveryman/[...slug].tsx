@@ -260,7 +260,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const deliveries = await getDeliveriesAvailable()
 
   const delivery = deliveries.find(delivery => delivery.id = String(slug));
-
   const product = {
     id: delivery.id,
     id_client: delivery.id_client,
