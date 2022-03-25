@@ -6,6 +6,12 @@ type Suggestion = {
   id_deliveryman: string,
   id_delivery: string,
   price: string,
+  deliveryman: {
+    id: string,
+    id_google: string,
+    email: string,
+    name: string
+  }
 }
 
 export async function getSuggestionsAvailable(id_delivery: string, token: string): Promise<Suggestion[]> {
@@ -21,7 +27,13 @@ export async function getSuggestionsAvailable(id_delivery: string, token: string
       id: suggestion.id,
       id_deliveryman: suggestion.id_deliveryman,
       id_delivery: suggestion.id_delivery,
-      price: suggestion.price
+      price: suggestion.price,
+      deliveryman: {
+        id: suggestion.deliveryman.id,
+        id_google: suggestion.deliveryman.id_google,
+        email: suggestion.deliveryman.email,
+        name: suggestion.deliveryman.name
+      }
     }
   })
 

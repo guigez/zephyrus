@@ -1,18 +1,18 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { Header } from '../../components/header';
-import { Sidebar } from '../../components/sidebar';
-import { Maps } from '../../components/maps';
-import { getCoord } from '../../api/maps';
+import { Header } from '../../../components/header';
+import { Sidebar } from '../../../components/sidebar';
+import { Maps } from '../../../components/maps';
+import { getCoord } from '../../../api/maps';
 import React, { useContext } from "react";
 import Modal from 'react-modal';
 
-import styles from '../../styles/delivery.module.scss'
+import styles from '../../../styles/delivery.module.scss'
 import { useEffect, useState } from 'react';
-import { GoogleAuthContext } from '../../contexts/GoogleAuthContext';
-import { getDeliveriesAvailable, useDeliveriesAvailable } from '../../services/hooks/useDeliveriesAvailable';
-import { api } from '../../services/api/api';
-import { METHODS } from 'http';
+import { GoogleAuthContext } from '../../../contexts/GoogleAuthContext';
+import { api } from '../../../services/api/api';
+import { getDelivery } from '../../../services/hooks/useDelivery';
+import { useClient } from '../../../services/hooks/useClient';
 
 
 function buscarCoordenada(endereco: string) {
@@ -52,13 +52,14 @@ export default function Delivery({ product }: ProductType) {
   const [preco, setPreco] = useState('(Nenhum Preço Sugerido)');
   const { user } = useContext(GoogleAuthContext);
 
+  const { data } = useClient(product.id_client, user.token)
+
   useEffect(() => {
     //origem
     buscarCoordenada('rua genesio ferreira martins, 81').then(e => {
       setOrigem(e.data.results[0].geometry.location)
 
     })
-
     //destino
     buscarCoordenada('Rua Orlando Bismara, 130 - Jardim Nova Manchester, Sorocaba - SP, 18052-015').then(e => {
       setDestino(e.data.results[0].geometry.location)
@@ -66,20 +67,24 @@ export default function Delivery({ product }: ProductType) {
   }, []);
 
   async function handleSubmitSuggestion() {
-
-    const { data } = await api.post(`deliveries/suggestion`,
-      JSON.stringify({
-        "deliveryId": product.id,
-        "priceSuggestion": preco
-      }),
-      {
-        headers: {
-          'Content-type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDc1MjQwMTcsImV4cCI6MTY0NzYxMDQxNywic3ViIjoiNjIyYTEyZjBkNjZhODgwZWVhMjRiNzhiIn0.y8S8G8D9VsOSRIgfTVimKl9E85Mv7iW2a6Yl0_iKHX8`,
-        },
-      })
-
-    setModalIsOpen(false)
+    try {
+      await api.post(`deliveries/suggestion`,
+        JSON.stringify({
+          "deliveryId": product.id,
+          "priceSuggestion": preco
+        }),
+        {
+          headers: {
+            'Content-type': 'application/json',
+            'Authorization': `Bearer ${user.token}`,
+          },
+        })
+      setModalIsOpen(false)
+    }
+    catch (error) {
+      alert(error.response.data.message)
+      setModalIsOpen(false)
+    }
   }
 
   return (
@@ -155,7 +160,7 @@ export default function Delivery({ product }: ProductType) {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Alessandro Costa</td>
+                    <td>{data.name}</td>
                   </tr>
                 </tbody>
 
@@ -255,11 +260,10 @@ export default function Delivery({ product }: ProductType) {
 }
 
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { slug } = params
-  const deliveries = await getDeliveriesAvailable()
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { token, id } = context.params;
 
-  const delivery = deliveries.find(delivery => delivery.id = String(slug));
+  const delivery = await getDelivery(id.toString(), token.toString());
 
   const product = {
     id: delivery.id,

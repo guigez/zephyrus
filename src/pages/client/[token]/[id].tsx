@@ -5,18 +5,16 @@ import { Sidebar } from '../../../components/sidebar';
 import { Maps } from '../../../components/maps';
 import { getCoord } from '../../../api/maps';
 import React, { useContext } from "react";
-import Modal from 'react-modal';
+
 
 import styles from '../../../styles/delivery.module.scss'
 import { useEffect, useState } from 'react';
 import { GoogleAuthContext } from '../../../contexts/GoogleAuthContext';
-import { getDeliveriesAvailable, useDeliveriesAvailable } from '../../../services/hooks/useDeliveriesAvailable';
 import { api } from '../../../services/api/api';
-import { METHODS } from 'http';
 import { BsCheckCircle } from 'react-icons/bs';
 import { IoIosCloseCircleOutline } from 'react-icons/io'
-import { getDelivery, useDelivery } from '../../../services/hooks/useDelivery';
-import { useGoogleAuth } from '../../../services/hooks/useGoogleAuth';
+import { getDelivery } from '../../../services/hooks/useDelivery';
+import { useSuggestionsAvailable } from '../../../services/hooks/useSuggestionAvailable';
 
 
 function buscarCoordenada(endereco: string) {
@@ -46,6 +44,20 @@ type ProductType = {
       description: string,
     }
   }
+  /*suggestions: [
+    {
+      id: string,
+      id_deliveryman: string,
+      id_delivery: string,
+      price: string,
+      deliveryman: {
+        id: string,
+        id_google: string,
+        email: string,
+        name: string
+      }
+    }
+  ]*/
 }
 
 export default function Delivery({ product }: ProductType) {
@@ -55,6 +67,8 @@ export default function Delivery({ product }: ProductType) {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [preco, setPreco] = useState('(Nenhum Preço Sugerido)');
   const { user } = useContext(GoogleAuthContext);
+
+  const { data: suggestions, isLoading } = useSuggestionsAvailable(product.id, user.token)
 
   useEffect(() => {
     //origem
@@ -154,29 +168,37 @@ export default function Delivery({ product }: ProductType) {
               <table>
                 <thead>
                   <tr>
+                    <th>Entregador</th>
                     <th>Preço</th>
                     <th>Aceitar</th>
                     <th>Recusar</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>14.55</td>
-                    <td style={{ textAlign: 'center' }}>
-                      <a><BsCheckCircle style={{
-                        color: '#78E025',
-                        fontSize: '2rem',
-                        fontWeight: '800'
-                      }}>
-                      </BsCheckCircle></a></td>
-                    <td style={{ textAlign: 'center' }}>
-                      <a><IoIosCloseCircleOutline style={{
-                        color: '#E73F5D',
-                        fontSize: '2.5rem',
-                        fontWeight: '800'
-                      }} >
-                      </IoIosCloseCircleOutline></a></td>
-                  </tr>
+                  {isLoading ? (<td>Loading...</td>) : suggestions.length === 0 ? (<h1>Sem sugestão</h1>) : suggestions.map(suggestion => {
+                    return (
+                      <>
+                        <tr key={suggestion.id}>
+                          <td>{suggestion.deliveryman.name}</td>
+                          <td>{suggestion.price}</td>
+                          <td style={{ textAlign: 'center' }}>
+                            <a><BsCheckCircle style={{
+                              color: '#78E025',
+                              fontSize: '2rem',
+                              fontWeight: '800'
+                            }}>
+                            </BsCheckCircle></a></td>
+                          <td style={{ textAlign: 'center' }}>
+                            <a><IoIosCloseCircleOutline style={{
+                              color: '#E73F5D',
+                              fontSize: '2.5rem',
+                              fontWeight: '800'
+                            }} >
+                            </IoIosCloseCircleOutline></a></td>
+                        </tr>
+                      </>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
@@ -196,6 +218,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { token, id } = context.params;
 
   const delivery = await getDelivery(id.toString(), token.toString());
+  //const suggestions = await getSuggestionsAvailable(id.toString(), token.toString())
 
   const product = {
     id: delivery.id,
@@ -222,6 +245,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       product,
+      //suggestions
     }
   }
 }

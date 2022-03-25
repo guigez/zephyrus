@@ -49,7 +49,7 @@ const Deliveries: NextPage = () => {
                       <tbody>
                         <tr key={delivery.id}>
                           <td style={{ color: '#2381FD', fontWeight: '500' }}>
-                            <Link href={`/delivery/${delivery.id}`}>{delivery.order.product_name}</Link></td>
+                            <Link href={`/delivery/${user.token}/${delivery.id}`}>{delivery.order.product_name}</Link></td>
                           <td>{delivery.origin}</td>
                           <td>{delivery.destiny}</td>
                         </tr>
