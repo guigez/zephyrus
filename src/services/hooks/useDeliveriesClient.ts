@@ -23,11 +23,11 @@ type Delivery = {
   }
 }
 
-export async function getDeliveriesClient(): Promise<Delivery[]>{
-      const { data } = await api.get('deliveries/client', {
+export async function getDeliveriesClient(token: string): Promise<Delivery[]>{
+      const { data } = await api.get('deliveriesClient', {
         headers: {
           'Content-type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDc1Mjk4OTcsImV4cCI6MTY0NzYxNjI5Nywic3ViIjoiNjIyYTEyMzIzMWEyZjMzZjJmNzBkYWQ2In0.y1FB_WxIJBiRSBMNM7XpQtpQqXw9BVHTpw-QWX4X-SM`, 
+          'Authorization': `Bearer ${token}`, 
         }
       })
 
@@ -55,13 +55,13 @@ export async function getDeliveriesClient(): Promise<Delivery[]>{
         }
       })
 
-      console.log(deliveries)
+     
       return deliveries; 
     
 }
 
-export function useDeliveriesClient() {
-  return useQuery('deliveries-client', getDeliveriesClient,{
+export function useDeliveriesClient(token: string) {
+  return useQuery(['deliveries-client', token], () => getDeliveriesClient(token),{
     staleTime: 1000 *5,
   })
 }

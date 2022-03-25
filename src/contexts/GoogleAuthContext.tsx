@@ -2,12 +2,14 @@ import Router from "next/router";
 import React, { useState } from "react";
 import { createContext, ReactNode } from "react";
 import { useGoogleLogin } from 'react-use-googlelogin'
+import { api } from "../services/api/api";
 
 type User = {
   id: string;
   name: string;
   email: string;
   avatar: string;
+  token: string;
 }
 
 type GoogleAuthContextType = {
@@ -41,12 +43,20 @@ export const GoogleAuthProvider = (props: AuthContextProviderPros) => {
         throw new Error('Missing information from Google Account.');
       }
 
+      const { data } = await api.post('session', { id_google: id, name: name, email: email }, {
+        headers: {
+          'Content-type': 'application/json',
+        }
+      });
+
+      const token = data;
 
       setUser({
         id: id,
         name: name,
         email: email,
-        avatar: avatar
+        avatar: avatar,
+        token: token
       })
     }
 
