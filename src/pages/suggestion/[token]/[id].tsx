@@ -69,6 +69,8 @@ export default function Delivery({ product }: ProductType) {
 
   const { data: suggestions, isLoading } = useSuggestionsAvailable(product.id, user.token)
 
+  //const suggestion = suggestions.find((element) => element.id == suggestion.id)
+
   useEffect(() => {
     //origem
     buscarCoordenada('rua genesio ferreira martins, 81').then(e => {
@@ -157,7 +159,7 @@ export default function Delivery({ product }: ProductType) {
                   </tr>
                 </thead>
                 <tbody>
-                  <td>Carlos</td>
+                  <td>{ }</td>
                 </tbody>
 
                 <thead>
