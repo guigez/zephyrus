@@ -15,6 +15,9 @@ import { BsCheckCircle } from 'react-icons/bs';
 import { IoIosCloseCircleOutline } from 'react-icons/io'
 import { getDelivery } from '../../../services/hooks/useDelivery';
 import { useSuggestionsAvailable } from '../../../services/hooks/useSuggestionAvailable';
+import Link from 'next/link';
+import { redirect } from 'next/dist/server/api-utils';
+import Router from 'next/router';
 
 
 function buscarCoordenada(endereco: string) {
@@ -64,9 +67,8 @@ export default function Delivery({ product }: ProductType) {
 
   const [origem, setOrigem] = useState({ lat: 0, lng: 0 });
   const [destino, setDestino] = useState({ lat: 0, lng: 0 });
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [preco, setPreco] = useState('(Nenhum Preço Sugerido)');
   const { user } = useContext(GoogleAuthContext);
+
 
   const { data: suggestions, isLoading } = useSuggestionsAvailable(product.id, user.token)
 
@@ -83,21 +85,24 @@ export default function Delivery({ product }: ProductType) {
     })
   }, []);
 
-  async function handleSubmitSuggestion() {
+  async function handleDeclineSuggestion(id: string) {
+    var suggestion = JSON.stringify({
+      "suggestionId": id,
+    });
 
-    const { data } = await api.post(`deliveries/suggestion`,
-      JSON.stringify({
-        "deliveryId": product.id,
-        "priceSuggestion": preco
-      }),
-      {
-        headers: {
-          'Content-type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDc1MjQwMTcsImV4cCI6MTY0NzYxMDQxNywic3ViIjoiNjIyYTEyZjBkNjZhODgwZWVhMjRiNzhiIn0.y8S8G8D9VsOSRIgfTVimKl9E85Mv7iW2a6Yl0_iKHX8`,
-        },
-      })
+    var headers = {
+      'Content-type': 'application/json',
+      'Authorization': `Bearer ${user.token}`,
+    };
 
-    setModalIsOpen(false)
+    const { data } = await api.delete(`deliveries/suggestion/decline/${id}`, { headers })
+
+    if (data.id)
+      Router.push('/dashboard')
+  }
+
+  async function handleAcceptSuggestion(id: string) {
+
   }
 
   return (
@@ -182,14 +187,15 @@ export default function Delivery({ product }: ProductType) {
                           <td>{suggestion.deliveryman.name}</td>
                           <td>{suggestion.price}</td>
                           <td style={{ textAlign: 'center' }}>
-                            <a><BsCheckCircle style={{
-                              color: '#78E025',
-                              fontSize: '2rem',
-                              fontWeight: '800'
-                            }}>
-                            </BsCheckCircle></a></td>
+                            <Link href={`/suggestion/${user.token}/${product.id}`}>
+                              <BsCheckCircle style={{
+                                color: '#78E025',
+                                fontSize: '2rem',
+                                fontWeight: '800'
+                              }}>
+                              </BsCheckCircle></Link></td>
                           <td style={{ textAlign: 'center' }}>
-                            <a><IoIosCloseCircleOutline style={{
+                            <a onClick={() => handleDeclineSuggestion(suggestion.id)}><IoIosCloseCircleOutline style={{
                               color: '#E73F5D',
                               fontSize: '2.5rem',
                               fontWeight: '800'
@@ -218,7 +224,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { token, id } = context.params;
 
   const delivery = await getDelivery(id.toString(), token.toString());
-  //const suggestions = await getSuggestionsAvailable(id.toString(), token.toString())
 
   const product = {
     id: delivery.id,

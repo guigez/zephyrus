@@ -15,7 +15,7 @@ type Suggestion = {
 }
 
 export async function getSuggestionsAvailable(id_delivery: string, token: string): Promise<Suggestion[]> {
-  const { data } = await api.get(`deliveries/suggestion/${id_delivery}`, {
+  const { data } = await api.get(`deliveries/suggestion/availables/${id_delivery}`, {
     headers: {
       'Content-type': 'application/json',
       'Authorization': `Bearer ${token}`,
@@ -41,7 +41,5 @@ export async function getSuggestionsAvailable(id_delivery: string, token: string
 }
 
 export function useSuggestionsAvailable(id_delivery: string, token: string) {
-  return useQuery(['suggestions-availabe', id_delivery, token], () => getSuggestionsAvailable(id_delivery, token), {
-    staleTime: 1000 * 5,
-  })
+  return useQuery(['suggestions-availabe', id_delivery, token], () => getSuggestionsAvailable(id_delivery, token))
 }

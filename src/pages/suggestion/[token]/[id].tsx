@@ -1,18 +1,21 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { Header } from '../../../components/header';
-import { Sidebar } from '../../../components/sidebar';
-import { Maps } from '../../../components/maps';
-import { getCoord } from '../../../api/maps';
+
 import React, { useContext } from "react";
-import Modal from 'react-modal';
+
 
 import styles from '../../../styles/delivery.module.scss'
 import { useEffect, useState } from 'react';
+import { BsCheckCircle } from 'react-icons/bs';
+import { IoIosCloseCircleOutline } from 'react-icons/io'
 import { GoogleAuthContext } from '../../../contexts/GoogleAuthContext';
-import { api } from '../../../services/api/api';
+import { getCoord } from '../../../api/maps';
+import { useSuggestionsAvailable } from '../../../services/hooks/useSuggestionAvailable';
+import { Header } from '../../../components/header';
+import { Sidebar } from '../../../components/sidebar';
+import { Maps } from '../../../components/maps';
 import { getDelivery } from '../../../services/hooks/useDelivery';
-import { useClient } from '../../../services/hooks/useClient';
+import Link from 'next/link';
 
 
 function buscarCoordenada(endereco: string) {
@@ -42,17 +45,29 @@ type ProductType = {
       description: string,
     }
   }
+  /*suggestions: [
+    {
+      id: string,
+      id_deliveryman: string,
+      id_delivery: string,
+      price: string,
+      deliveryman: {
+        id: string,
+        id_google: string,
+        email: string,
+        name: string
+      }
+    }
+  ]*/
 }
 
 export default function Delivery({ product }: ProductType) {
 
   const [origem, setOrigem] = useState({ lat: 0, lng: 0 });
   const [destino, setDestino] = useState({ lat: 0, lng: 0 });
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [preco, setPreco] = useState('(Nenhum Preço Sugerido)');
   const { user } = useContext(GoogleAuthContext);
 
-  const { data } = useClient(product.id_client, user.token)
+  const { data: suggestions, isLoading } = useSuggestionsAvailable(product.id, user.token)
 
   useEffect(() => {
     //origem
@@ -60,32 +75,15 @@ export default function Delivery({ product }: ProductType) {
       setOrigem(e.data.results[0].geometry.location)
 
     })
+
     //destino
     buscarCoordenada('Rua Orlando Bismara, 130 - Jardim Nova Manchester, Sorocaba - SP, 18052-015').then(e => {
       setDestino(e.data.results[0].geometry.location)
     })
   }, []);
 
-  async function handleSubmitSuggestion() {
-    try {
-      await api.post(`deliveries/suggestion`,
-        JSON.stringify({
-          "deliveryId": product.id,
-          "priceSuggestion": preco
-        }),
-        {
-          headers: {
-            'Content-type': 'application/json',
-            'Authorization': `Bearer ${user.token}`,
-          },
-        })
-      setModalIsOpen(false)
-    }
-    catch (error) {
-      alert(error.response.data.message)
-      setModalIsOpen(false)
-    }
-  }
+  async function handlePay() { }
+
 
   return (
     <>
@@ -155,96 +153,58 @@ export default function Delivery({ product }: ProductType) {
               <table>
                 <thead>
                   <tr>
-                    <th>Cliente</th>
+                    <th>Entregador</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>{data ? data.name : 'Loading'}</td>
-                  </tr>
+                  <td>Carlos</td>
                 </tbody>
 
-                <button onClick={() => setModalIsOpen(true)} style={{
-                  color: 'white',
-                  backgroundColor: '#2381FD',
-                  borderRadius: '4px',
-                  font: '500 1rem "Roboto", sans-serif',
-                  cursor: 'pointer',
-                  border: '0',
-                  height: '3rem',
-                  width: '20rem',
-                  textAlign: 'center',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                  textAlignLast: 'center',
-                  marginTop: '15rem'
-                }}>Sugerir Preço</button>
-                <Modal
-                  isOpen={modalIsOpen}
-                  shouldCloseOnOverlayClick={false}
-                  onRequestClose={() => setModalIsOpen(false)}
-                  style={
-                    {
-                      content: {
-                        borderRadius: '1rem',
-                        width: '400px',
-                        height: '300px',
-                        marginLeft: '40%',
-                        color: 'blue',
-                        border: '0',
-                        boxShadow: '0 0 15px 4px rgba(0,0,0,0.06)',
-                      }
-                    }
-                  }
-                >
-                  <label style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    color: '#2381FD',
-                    font: '500 1rem "Roboto", sans-serif'
+                <thead>
+                  <tr>
+                    <th>Preço</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <td>12.00</td>
+                </tbody>
 
-                  }}>
-                    Sugira um preço para a entrega:
-                    <p></p>
-                    <input type='number' name="preco" placeholder="Sugira um Preço"
-                      onChange={event => setPreco(event.target.value)}
-                      style={{
-                        marginTop: '4rem',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                        textAlign: 'center',
-                        width: '20rem',
-                        padding: '1rem',
-                        border: '0',
-                        borderBottom: '1px solid #eee',
-                        boxShadow: '0 0 15px 4px rgba(0,0,0,0.06)',
-                        borderRadius: '1rem'
-                      }} />
-                  </label>
-                  <p></p>
-                  <input type="submit" value="Salvar" onClick={handleSubmitSuggestion}
-                    style={
-                      {
-                        display: 'flex',
-                        color: 'white',
-                        backgroundColor: '#2381FD',
-                        borderRadius: '4px',
-                        font: '500 1rem "Roboto", sans-serif',
-                        cursor: 'pointer',
-                        border: '0',
-                        height: '3rem',
-                        width: '15rem',
-                        paddingLeft: '6rem',
-                        textAlign: 'center',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                        marginTop: '3rem'
-                      }
-                    }
-                  />
-                </Modal>
+                <tbody>
+                  <button onClick={() => handlePay()} style={{
+                    color: 'white',
+                    backgroundColor: '#2381FD',
+                    borderRadius: '4px',
+                    font: '500 1rem "Roboto", sans-serif',
+                    cursor: 'pointer',
+                    border: '0',
+                    height: '3rem',
+                    width: '20rem',
+                    textAlign: 'center',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    textAlignLast: 'center',
+                    marginTop: '15rem'
+                  }}>Pagar</button>
+
+                  <Link href={'/dashboard'}>
+                    <button style={{
+                      color: 'white',
+                      backgroundColor: '#737380',
+                      borderRadius: '4px',
+                      font: '500 1rem "Roboto", sans-serif',
+                      cursor: 'pointer',
+                      border: '0',
+                      height: '3rem',
+                      width: '20rem',
+                      textAlign: 'center',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                      textAlignLast: 'center',
+                      marginTop: '1rem'
+                    }}>Cancelar</button>
+                  </Link>
+
+                </tbody>
               </table>
             </div>
 
@@ -254,7 +214,6 @@ export default function Delivery({ product }: ProductType) {
           </div>
         </div>
       </div>
-
     </>
   );
 }
@@ -290,6 +249,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       product,
+      //suggestions
     }
   }
 }
