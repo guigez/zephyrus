@@ -4,18 +4,20 @@ import Head from 'next/head'
 import React, { useContext } from "react";
 
 
-import styles from '../../../styles/delivery.module.scss'
+import styles from '../../../../styles/delivery.module.scss'
 import { useEffect, useState } from 'react';
-import { BsCheckCircle } from 'react-icons/bs';
-import { IoIosCloseCircleOutline } from 'react-icons/io'
-import { GoogleAuthContext } from '../../../contexts/GoogleAuthContext';
-import { getCoord } from '../../../api/maps';
-import { useSuggestionsAvailable } from '../../../services/hooks/useSuggestionAvailable';
-import { Header } from '../../../components/header';
-import { Sidebar } from '../../../components/sidebar';
-import { Maps } from '../../../components/maps';
-import { getDelivery } from '../../../services/hooks/useDelivery';
+import { GoogleAuthContext } from '../../../../contexts/GoogleAuthContext';
+import { getCoord } from '../../../../api/maps';
+import { Header } from '../../../../components/header';
+import { Sidebar } from '../../../../components/sidebar';
+import { Maps } from '../../../../components/maps';
+import { getDelivery } from '../../../../services/hooks/useDelivery';
 import Link from 'next/link';
+import { stripe } from '../../../../services/stripe';
+import { getSuggestionById } from '../../../../services/hooks/getSuggestionById';
+import { getStripeJs } from '../../../../services/stripe-js';
+import { api } from '../../../../services/api/api';
+import { apiFront } from '../../../../services/api/apiFront';
 
 
 function buscarCoordenada(endereco: string) {
@@ -44,30 +46,31 @@ type ProductType = {
       weight: string,
       description: string,
     }
-  }
-  /*suggestions: [
-    {
+  },
+  suggestion: {
+    id: string,
+    id_deliveryman: string,
+    id_delivery: string,
+    price: string,
+    deliveryman: {
       id: string,
-      id_deliveryman: string,
-      id_delivery: string,
-      price: string,
-      deliveryman: {
-        id: string,
-        id_google: string,
-        email: string,
-        name: string
-      }
+      id_google: string,
+      email: string,
+      name: string
     }
-  ]*/
+  },
+  price: {
+    id: string
+  }
 }
 
-export default function Delivery({ product }: ProductType) {
+export default function Delivery({ product, suggestion, price }: ProductType) {
 
   const [origem, setOrigem] = useState({ lat: 0, lng: 0 });
   const [destino, setDestino] = useState({ lat: 0, lng: 0 });
   const { user } = useContext(GoogleAuthContext);
 
-  const { data: suggestions, isLoading } = useSuggestionsAvailable(product.id, user.token)
+  //const { data: suggestions, isLoading } = useSuggestionsAvailable(product.id, user.token)
 
   //const suggestion = suggestions.find((element) => element.id == suggestion.id)
 
@@ -84,7 +87,28 @@ export default function Delivery({ product }: ProductType) {
     })
   }, []);
 
-  async function handlePay() { }
+  async function handlePay() {
+    console.log('stripe')
+
+    try {
+      const request = {
+        email: user.email,
+        priceId: price.id
+      }
+
+      const response = await apiFront.post('/stripeSession', request);
+
+      const { sessionId } = response.data;
+
+      const str = await getStripeJs();
+
+      await str.redirectToCheckout({ sessionId });
+
+    } catch (err) {
+      alert('err ao realizar pagamento ' + err);
+    }
+
+  }
 
 
   return (
@@ -159,7 +183,7 @@ export default function Delivery({ product }: ProductType) {
                   </tr>
                 </thead>
                 <tbody>
-                  <td>{ }</td>
+                  <td>{suggestion.deliveryman.name}</td>
                 </tbody>
 
                 <thead>
@@ -168,7 +192,7 @@ export default function Delivery({ product }: ProductType) {
                   </tr>
                 </thead>
                 <tbody>
-                  <td>12.00</td>
+                  <td>{suggestion.price}</td>
                 </tbody>
 
                 <tbody>
@@ -217,14 +241,31 @@ export default function Delivery({ product }: ProductType) {
         </div>
       </div>
     </>
-  );
-}
+  )
+};
+
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { token, id } = context.params;
+  const { token, id, suggestionId } = context.params;
 
   const delivery = await getDelivery(id.toString(), token.toString());
+
+  const suggestion = await getSuggestionById(suggestionId.toString(), token.toString());
+
+
+
+  const deliveryProduct = await stripe.products.create({ name: delivery.order.product_name });
+
+  const priceStripe = await stripe.prices.create({
+    unit_amount: parseFloat(suggestion.price) * 100, //em centavos
+    currency: 'brl',
+    product: `${deliveryProduct.id}`,
+  });
+
+  const price = {
+    id: priceStripe.id
+  }
 
   const product = {
     id: delivery.id,
@@ -251,7 +292,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       product,
-      //suggestions
+      suggestion,
+      price,
     }
   }
 }

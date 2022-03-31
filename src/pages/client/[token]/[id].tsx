@@ -187,7 +187,7 @@ export default function Delivery({ product }: ProductType) {
                           <td>{suggestion.deliveryman.name}</td>
                           <td>{suggestion.price}</td>
                           <td style={{ textAlign: 'center' }}>
-                            <Link href={`/suggestion/${user.token}/${product.id}`}>
+                            <Link href={`/suggestion/${user.token}/${product.id}/${suggestion.id}`}>
                               <BsCheckCircle style={{
                                 color: '#78E025',
                                 fontSize: '2rem',

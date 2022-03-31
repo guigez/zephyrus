@@ -23,45 +23,45 @@ type Delivery = {
   }
 }
 
-export async function getDeliveriesClient(token: string): Promise<Delivery[]>{
-      const { data } = await api.get('deliveriesClient', {
-        headers: {
-          'Content-type': 'application/json',
-          'Authorization': `Bearer ${token}`, 
-        }
-      })
+export async function getDeliveriesClient(token: string): Promise<Delivery[]> {
+  const { data } = await api.get('deliveriesClient', {
+    headers: {
+      'Content-type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    }
+  })
 
-      const deliveries: Delivery[] = data.deliveries.map((delivery: Delivery) => {
-        return {
-          id: delivery.id,
-          id_client: delivery.id_client,
-          id_deliveryman: delivery.id_deliveryman,
-          id_order: delivery.id_order,
-          origin: delivery.origin,
-          destiny: delivery.destiny,
-          price: delivery.price,
-          status: delivery.status,
-          created_at: delivery.created_at,
-          update_at: delivery.update_at,
-          order: {
-            id: delivery.order.id,
-            product_name: delivery.order.product_name,
-            width: delivery.order.width,
-            height: delivery.order.height,
-            length: delivery.order.length,
-            weight: delivery.order.weight,
-            description: delivery.order.description
-          }
-        }
-      })
+  const deliveries: Delivery[] = data.deliveries.map((delivery: Delivery) => {
+    return {
+      id: delivery.id,
+      id_client: delivery.id_client,
+      id_deliveryman: delivery.id_deliveryman,
+      id_order: delivery.id_order,
+      origin: delivery.origin,
+      destiny: delivery.destiny,
+      price: delivery.price,
+      status: delivery.status,
+      created_at: delivery.created_at,
+      update_at: delivery.update_at,
+      order: {
+        id: delivery.order.id,
+        product_name: delivery.order.product_name,
+        width: delivery.order.width,
+        height: delivery.order.height,
+        length: delivery.order.length,
+        weight: delivery.order.weight,
+        description: delivery.order.description
+      }
+    }
+  })
 
-     
-      return deliveries; 
-    
+
+  return deliveries;
+
 }
 
 export function useDeliveriesClient(token: string) {
-  return useQuery(['deliveries-client', token], () => getDeliveriesClient(token),{
-    staleTime: 1000 *5,
+  return useQuery(['deliveries-client', token], () => getDeliveriesClient(token), {
+    staleTime: 1000 * 5,
   })
 }

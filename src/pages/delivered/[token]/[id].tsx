@@ -6,8 +6,6 @@ import React, { useContext } from "react";
 
 import styles from '../../../styles/delivery.module.scss'
 import { useEffect, useState } from 'react';
-import { BsCheckCircle } from 'react-icons/bs';
-import { IoIosCloseCircleOutline } from 'react-icons/io'
 import { GoogleAuthContext } from '../../../contexts/GoogleAuthContext';
 import { getCoord } from '../../../api/maps';
 import { useSuggestionsAvailable } from '../../../services/hooks/useSuggestionAvailable';
@@ -15,7 +13,7 @@ import { Header } from '../../../components/header';
 import { Sidebar } from '../../../components/sidebar';
 import { Maps } from '../../../components/maps';
 import { getDelivery } from '../../../services/hooks/useDelivery';
-import Link from 'next/link';
+import { getSuggestionById } from '../../../services/hooks/getSuggestionById';
 
 
 function buscarCoordenada(endereco: string) {
@@ -43,22 +41,8 @@ type ProductType = {
       length: string,
       weight: string,
       description: string,
-    }
+    },
   }
-  /*suggestions: [
-    {
-      id: string,
-      id_deliveryman: string,
-      id_delivery: string,
-      price: string,
-      deliveryman: {
-        id: string,
-        id_google: string,
-        email: string,
-        name: string
-      }
-    }
-  ]*/
 }
 
 export default function Delivery({ product }: ProductType) {
@@ -159,7 +143,7 @@ export default function Delivery({ product }: ProductType) {
                   </tr>
                 </thead>
                 <tbody>
-                  <td>{ }</td>
+                  <td>Carlos</td>
                 </tbody>
 
                 <thead>
@@ -168,7 +152,7 @@ export default function Delivery({ product }: ProductType) {
                   </tr>
                 </thead>
                 <tbody>
-                  <td>12.00</td>
+                  <td>{product.price ? product.price : 14.54}</td>
                 </tbody>
 
                 <tbody>
@@ -206,6 +190,7 @@ export default function Delivery({ product }: ProductType) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { token, id } = context.params;
 
+
   const delivery = await getDelivery(id.toString(), token.toString());
 
   const product = {
@@ -233,7 +218,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       product,
-      //suggestions
     }
   }
 }

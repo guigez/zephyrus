@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { GoogleAuthContext } from '../../contexts/GoogleAuthContext';
 import { getDeliveriesAvailable, useDeliveriesAvailable } from '../../services/hooks/useDeliveriesAvailable';
 import { api } from '../../services/api/api';
-import { METHODS } from 'http';
+
 
 
 function buscarCoordenada(endereco: string) {

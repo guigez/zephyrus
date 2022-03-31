@@ -79,7 +79,7 @@ const Dashboard: NextPage = () => {
                     <>
                       <tbody>
                         <tr>
-                          <td>{deliveryDeliveryman.order.product_name}</td>
+                          <td style={{ color: '#2381FD', fontWeight: '500' }}> <Link href={`/delivered/${user.token}/${deliveryDeliveryman.id}`}>{deliveryDeliveryman.order.product_name}</Link></td>
                           {deliveryDeliveryman.status === 'available' ? (
                             <td style={{ backgroundColor: '#E73F5D', textAlign: 'center', fontWeight: '500' }}>Não Entregue</td>
                           ) : deliveryDeliveryman.status === 'delivered' ? (
