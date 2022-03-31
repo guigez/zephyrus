@@ -1,27 +1,27 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 
 import background from '../../public/Background.svg'
 import googleIcon from '../../public/GoogleIcon.svg'
-import { useGoogleAuth } from '../services/hooks/useGoogleAuth'
 
-
+import { signIn, useSession } from 'next-auth/react'
 
 import styles from '../styles/home.module.scss'
+import router from 'next/router'
+import { useEffect } from 'react'
+
+
 
 const Home: NextPage = () => {
-  const router = useRouter();
-  const { user, googleSignIn, googleBeSignIn } = useGoogleAuth();
+  const { data: session } = useSession()
 
-  async function handleSignIn() {
-    if (googleBeSignIn) {
-      await googleSignIn();
+  useEffect(() => {
+    if (session) {
+
+      router.push('/dashboard')
     }
-
-    router.push('/dashboard')
-  }
+  }, [session])
 
   return (
     <>
@@ -36,13 +36,13 @@ const Home: NextPage = () => {
 
         <main>
           <div className={styles.login}>
-            <button onClick={handleSignIn} className={styles.buttonGoogle}>
+            <button onClick={() => signIn('google')} className={styles.buttonGoogle}>
               <Image className={styles.googleIcon} height={100} src={googleIcon} alt="Google Icon" />
               <span>Log in with Google</span>
             </button>
           </div>
         </main>
-      </div>
+      </div >
     </>
   )
 }

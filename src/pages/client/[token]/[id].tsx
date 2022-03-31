@@ -18,6 +18,7 @@ import { useSuggestionsAvailable } from '../../../services/hooks/useSuggestionAv
 import Link from 'next/link';
 import { redirect } from 'next/dist/server/api-utils';
 import Router from 'next/router';
+import { useSession } from 'next-auth/react';
 
 
 function buscarCoordenada(endereco: string) {
@@ -46,31 +47,21 @@ type ProductType = {
       weight: string,
       description: string,
     }
-  }
-  /*suggestions: [
-    {
-      id: string,
-      id_deliveryman: string,
-      id_delivery: string,
-      price: string,
-      deliveryman: {
-        id: string,
-        id_google: string,
-        email: string,
-        name: string
-      }
+    deliveryman: {
+      name: string | null
     }
-  ]*/
+  }
 }
 
 export default function Delivery({ product }: ProductType) {
 
   const [origem, setOrigem] = useState({ lat: 0, lng: 0 });
   const [destino, setDestino] = useState({ lat: 0, lng: 0 });
-  const { user } = useContext(GoogleAuthContext);
+  const { data } = useSession();
+  const { token } = data;
 
 
-  const { data: suggestions, isLoading } = useSuggestionsAvailable(product.id, user.token)
+  const { data: suggestions, isLoading } = useSuggestionsAvailable(product.id, token as string)
 
   useEffect(() => {
     //origem
@@ -92,7 +83,7 @@ export default function Delivery({ product }: ProductType) {
 
     var headers = {
       'Content-type': 'application/json',
-      'Authorization': `Bearer ${user.token}`,
+      'Authorization': `Bearer ${token as string}`,
     };
 
     const { data } = await api.delete(`deliveries/suggestion/decline/${id}`, { headers })
@@ -169,44 +160,77 @@ export default function Delivery({ product }: ProductType) {
                   </tr>
                 </tbody>
               </table>
-
-              <table>
-                <thead>
-                  <tr>
-                    <th>Entregador</th>
-                    <th>Preço</th>
-                    <th>Aceitar</th>
-                    <th>Recusar</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {isLoading ? (<td>Loading...</td>) : suggestions.length === 0 ? (<h1>Sem sugestão</h1>) : suggestions.map(suggestion => {
-                    return (
-                      <>
-                        <tr key={suggestion.id}>
-                          <td>{suggestion.deliveryman.name}</td>
-                          <td>{suggestion.price}</td>
-                          <td style={{ textAlign: 'center' }}>
-                            <Link href={`/suggestion/${user.token}/${product.id}/${suggestion.id}`}>
-                              <BsCheckCircle style={{
-                                color: '#78E025',
-                                fontSize: '2rem',
+              {product.status === 'available' ? (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Entregador</th>
+                      <th>Preço</th>
+                      <th>Aceitar</th>
+                      <th>Recusar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {isLoading ? (<td>Loading...</td>) : suggestions.length === 0 ? (<h1>Sem sugestão</h1>) : suggestions.map(suggestion => {
+                      return (
+                        <>
+                          <tr key={suggestion.id}>
+                            <td>{suggestion.deliveryman.name}</td>
+                            <td>{suggestion.price}</td>
+                            <td style={{ textAlign: 'center' }}>
+                              <Link href={`/suggestion/${token}/${product.id}/${suggestion.id}`}>
+                                <a><BsCheckCircle style={{
+                                  color: '#78E025',
+                                  fontSize: '2rem',
+                                  fontWeight: '800'
+                                }}>
+                                </BsCheckCircle></a></Link></td>
+                            <td style={{ textAlign: 'center' }}>
+                              <a onClick={() => handleDeclineSuggestion(suggestion.id)}><IoIosCloseCircleOutline style={{
+                                color: '#E73F5D',
+                                fontSize: '2.5rem',
                                 fontWeight: '800'
-                              }}>
-                              </BsCheckCircle></Link></td>
-                          <td style={{ textAlign: 'center' }}>
-                            <a onClick={() => handleDeclineSuggestion(suggestion.id)}><IoIosCloseCircleOutline style={{
-                              color: '#E73F5D',
-                              fontSize: '2.5rem',
-                              fontWeight: '800'
-                            }} >
-                            </IoIosCloseCircleOutline></a></td>
-                        </tr>
-                      </>
-                    )
-                  })}
-                </tbody>
-              </table>
+                              }} >
+                              </IoIosCloseCircleOutline></a></td>
+                          </tr>
+                        </>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Entregador</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <td>{product.deliveryman.name}</td>
+                  </tbody>
+
+                  <thead>
+                    <tr>
+                      <th>Preço</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{product.price ? product.price : 14.54}</td>
+                    </tr>
+                  </tbody>
+                  <br></br>
+                  <tbody>
+                    <tr>
+                      {product.status === 'delivered' ? (
+                        <td style={{ backgroundColor: '#78E025', textAlign: 'center', fontWeight: '500' }}>Entregue</td>
+                      ) :
+                        <td style={{ backgroundColor: '#E9E125', textAlign: 'center', fontWeight: '500' }}>Aguardando Entrega</td>
+                      }
+                    </tr>
+                  </tbody>
+                </table>
+              )}
             </div>
 
             <div className={styles.map}>
@@ -224,6 +248,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { token, id } = context.params;
 
   const delivery = await getDelivery(id.toString(), token.toString());
+
+  console.log(delivery.deliveryman.name)
 
   const product = {
     id: delivery.id,
@@ -244,13 +270,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       length: delivery.order.length,
       weight: delivery.order.weight,
       description: delivery.order.description
+    },
+    deliveryman: {
+      name: delivery.deliveryman.name
     }
   }
 
   return {
     props: {
       product,
-      //suggestions
     }
   }
 }

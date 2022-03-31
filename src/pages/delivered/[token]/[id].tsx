@@ -8,12 +8,12 @@ import styles from '../../../styles/delivery.module.scss'
 import { useEffect, useState } from 'react';
 import { GoogleAuthContext } from '../../../contexts/GoogleAuthContext';
 import { getCoord } from '../../../api/maps';
-import { useSuggestionsAvailable } from '../../../services/hooks/useSuggestionAvailable';
 import { Header } from '../../../components/header';
 import { Sidebar } from '../../../components/sidebar';
 import { Maps } from '../../../components/maps';
 import { getDelivery } from '../../../services/hooks/useDelivery';
-import { getSuggestionById } from '../../../services/hooks/getSuggestionById';
+import { api } from '../../../services/api/api';
+import router from 'next/router';
 
 
 function buscarCoordenada(endereco: string) {
@@ -42,18 +42,17 @@ type ProductType = {
       weight: string,
       description: string,
     },
+    deliveryman: {
+      name: string,
+    },
   }
+  token: string
 }
 
-export default function Delivery({ product }: ProductType) {
+export default function Delivery({ product, token }: ProductType) {
 
   const [origem, setOrigem] = useState({ lat: 0, lng: 0 });
   const [destino, setDestino] = useState({ lat: 0, lng: 0 });
-  const { user } = useContext(GoogleAuthContext);
-
-  const { data: suggestions, isLoading } = useSuggestionsAvailable(product.id, user.token)
-
-  //const suggestion = suggestions.find((element) => element.id == suggestion.id)
 
   useEffect(() => {
     //origem
@@ -68,8 +67,16 @@ export default function Delivery({ product }: ProductType) {
     })
   }, []);
 
-  async function handlePay() { }
+  async function handleDelivered(id_delivery: string) {
+    await api.put('/delivery/status', { id_delivery, status: 'delivered' }, {
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      }
+    });
 
+    router.push('/dashboard');
+  }
 
   return (
     <>
@@ -143,7 +150,7 @@ export default function Delivery({ product }: ProductType) {
                   </tr>
                 </thead>
                 <tbody>
-                  <td>Carlos</td>
+                  <td>{product.deliveryman.name}</td>
                 </tbody>
 
                 <thead>
@@ -156,7 +163,7 @@ export default function Delivery({ product }: ProductType) {
                 </tbody>
 
                 <tbody>
-                  <button onClick={() => handlePay()} style={{
+                  <button onClick={() => handleDelivered(product.id)} style={{
                     color: 'white',
                     backgroundColor: '#2381FD',
                     borderRadius: '4px',
@@ -212,12 +219,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       length: delivery.order.length,
       weight: delivery.order.weight,
       description: delivery.order.description
+    },
+    deliveryman: {
+      name: delivery.deliveryman.name
     }
   }
 
   return {
     props: {
       product,
+      token
     }
   }
 }

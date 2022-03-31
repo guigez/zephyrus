@@ -13,6 +13,7 @@ import { GoogleAuthContext } from '../../../contexts/GoogleAuthContext';
 import { api } from '../../../services/api/api';
 import { getDelivery } from '../../../services/hooks/useDelivery';
 import { useClient } from '../../../services/hooks/useClient';
+import { useSession } from 'next-auth/react';
 
 
 function buscarCoordenada(endereco: string) {
@@ -50,9 +51,10 @@ export default function Delivery({ product }: ProductType) {
   const [destino, setDestino] = useState({ lat: 0, lng: 0 });
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [preco, setPreco] = useState('(Nenhum Preço Sugerido)');
-  const { user } = useContext(GoogleAuthContext);
+  const { data } = useSession();
+  const { token } = data;
 
-  const { data } = useClient(product.id_client, user.token)
+  const { data: client } = useClient(product.id_client, token as string)
 
   useEffect(() => {
     //origem
@@ -76,7 +78,7 @@ export default function Delivery({ product }: ProductType) {
         {
           headers: {
             'Content-type': 'application/json',
-            'Authorization': `Bearer ${user.token}`,
+            'Authorization': `Bearer ${token}`,
           },
         })
       setModalIsOpen(false)
@@ -160,7 +162,7 @@ export default function Delivery({ product }: ProductType) {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{data ? data.name : 'Loading'}</td>
+                    <td>{client ? client.name : 'Loading'}</td>
                   </tr>
                 </tbody>
 

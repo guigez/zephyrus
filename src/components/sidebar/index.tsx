@@ -4,14 +4,15 @@ import { BsBoxArrowLeft } from 'react-icons/bs'
 
 import styles from './styles.module.scss'
 import Link from 'next/link';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useGoogleAuth } from '../../services/hooks/useGoogleAuth';
-
 
 export function Sidebar() {
   const { asPath } = useRouter()
   const { googleSignOut, googleBeSignIn } = useGoogleAuth();
   const router = useRouter();
+
+
 
   async function logOut() {
     if (!googleBeSignIn) {

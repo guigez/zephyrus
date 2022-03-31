@@ -18,6 +18,7 @@ import { getSuggestionById } from '../../../../services/hooks/getSuggestionById'
 import { getStripeJs } from '../../../../services/stripe-js';
 import { api } from '../../../../services/api/api';
 import { apiFront } from '../../../../services/api/apiFront';
+import { useSession } from 'next-auth/react';
 
 
 function buscarCoordenada(endereco: string) {
@@ -68,7 +69,7 @@ export default function Delivery({ product, suggestion, price }: ProductType) {
 
   const [origem, setOrigem] = useState({ lat: 0, lng: 0 });
   const [destino, setDestino] = useState({ lat: 0, lng: 0 });
-  const { user } = useContext(GoogleAuthContext);
+  const { data: session } = useSession();
 
   //const { data: suggestions, isLoading } = useSuggestionsAvailable(product.id, user.token)
 
@@ -92,7 +93,7 @@ export default function Delivery({ product, suggestion, price }: ProductType) {
 
     try {
       const request = {
-        email: user.email,
+        email: session.user.email,
         priceId: price.id
       }
 
@@ -107,7 +108,6 @@ export default function Delivery({ product, suggestion, price }: ProductType) {
     } catch (err) {
       alert('err ao realizar pagamento ' + err);
     }
-
   }
 
 
