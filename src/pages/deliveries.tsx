@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { NextPage } from 'next'
+import { useSession } from 'next-auth/react';
 import Head from 'next/head'
 import Link from 'next/link';
 import { useContext, useEffect } from 'react';
@@ -11,8 +12,9 @@ import { useDeliveriesAvailable } from '../services/hooks/useDeliveriesAvailable
 import styles from '../styles/deliveries.module.scss'
 
 const Deliveries: NextPage = () => {
-  const { user } = useContext(GoogleAuthContext);
-  const { data, isLoading, isFetching } = useDeliveriesAvailable(user.token);
+  const { data } = useSession();
+  const { token } = data;
+  const { data: deliveries, isLoading, isFetching } = useDeliveriesAvailable(token as string);
 
   async function handleDelivery(id: string) {
 
@@ -43,13 +45,13 @@ const Deliveries: NextPage = () => {
                   <div className={styles.table}>
                     <h1>Loading ...</h1>
                   </div>
-                ) : data.map(delivery => {
+                ) : deliveries.map(delivery => {
                   return (
                     <>
                       <tbody>
                         <tr key={delivery.id}>
                           <td style={{ color: '#2381FD', fontWeight: '500' }}>
-                            <Link href={`/delivery/${user.token}/${delivery.id}`}>{delivery.order.product_name}</Link></td>
+                            <Link href={`/delivery/${token}/${delivery.id}`}>{delivery.order.product_name}</Link></td>
                           <td>{delivery.origin}</td>
                           <td>{delivery.destiny}</td>
                         </tr>

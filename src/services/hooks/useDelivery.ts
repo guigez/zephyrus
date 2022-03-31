@@ -21,6 +21,9 @@ type data = {
     length: string,
     weight: string,
     description: string,
+  },
+  deliveryman?: {
+    name: string
   }
 }
 
@@ -33,7 +36,8 @@ export async function getDelivery(id_delivery: string, token: string): Promise<d
     }
   })
 
-  const delivery: data = {
+
+  const delivery = {
     id: data.delivery.id,
     id_client: data.delivery.id_client,
     id_deliveryman: data.delivery.id_deliveryman,
@@ -52,9 +56,11 @@ export async function getDelivery(id_delivery: string, token: string): Promise<d
       length: data.delivery.order.length,
       weight: data.delivery.order.weight,
       description: data.delivery.order.description
+    },
+    deliveryman: {
+      name: data.delivery.deliveryman?.name || null
     }
   }
-
 
 
   return delivery;
