@@ -58,12 +58,12 @@ export default function Delivery({ product }: ProductType) {
 
   useEffect(() => {
     //origem
-    buscarCoordenada('rua genesio ferreira martins, 81').then(e => {
+    buscarCoordenada(product.origin).then(e => {
       setOrigem(e.data.results[0].geometry.location)
 
     })
     //destino
-    buscarCoordenada('Rua Orlando Bismara, 130 - Jardim Nova Manchester, Sorocaba - SP, 18052-015').then(e => {
+    buscarCoordenada(product.destiny).then(e => {
       setDestino(e.data.results[0].geometry.location)
     })
   }, []);
