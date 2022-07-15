@@ -1,10 +1,10 @@
 # App ToDo Application
 <p align="center">
-  <img src=".github/logo.png" width="140px" />
+  <img src=".github/logo.svg" width="140px" />
 </p>
 
-<h1 align="center">App ToDo Applicaton</h1>
-<p align="center">A kanban board style task manager.</p>
+<h1 align="center">Zephyrus</h1>
+<p align="center">Delivered as a Service.</p>
 
 <h3 align="center">
   <a href="#" target="_blank">
