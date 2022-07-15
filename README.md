@@ -1,9 +1,7 @@
-# App ToDo Application
+#  Zephyrus Application
 <p align="center">
   <img src=".github/logo.svg" width="140px" />
 </p>
-
-<h1 align="center">Zephyrus</h1>
 <p align="center">Delivered as a Service.</p>
 
 <h3 align="center">
