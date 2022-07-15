@@ -23,7 +23,7 @@ Sample preview:
 
 ## About
 
-Delivered as a service, developed with React and integrated with Google's authentication API and Stripe for making payments
+Delivered as a service, developed with React and integrated with Google's authentication and Maps API and Stripe for making payments
 
 ## API
 - [Zephyrus API](https://github.com/YuutaDragon/api-zephyrus)
